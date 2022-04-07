@@ -1,0 +1,64 @@
+body{
+    background-color: #1d212e;
+}
+
+
+/* Bootstrap css */
+.fa-envelope{
+    font-size: 1.8rem;
+}
+.form-control{
+    border-color: #a955f2;
+}
+.col-8{
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+
+/* Login Component css */
+.emaiLabel{
+    margin-right: 10px;
+}
+
+.logBody{
+    background-color: #a955f2;
+    padding-bottom: 200px;
+}
+
+div.login-title p{
+    color:#d6d6d6;
+    font-size: 0.8em;
+}
+.login-title{
+    color:white;
+    text-align: center;
+    margin: 0;
+    padding: 80px 0 20px 0;
+}
+.center-login-comp{
+    position: relative;
+    bottom: 240px;
+    background-color: #282d40;
+    color:white;
+    margin: 5% 500px 0px 500px;
+    padding: 100px;
+    border: #282d40 10px solid;
+    border-radius: 10px;
+    box-shadow: 15px 15px black;
+}
+div.center-login-comp p{
+    color: #d6d6d6  
+}
+
+/* Footer css */
+.footer{
+    background-color: #42c266;
+    text-align: center;
+    padding: 40px 0 40px 0;
+    color: white;
+    margin-top: 250px;
+}
+div.footer p{
+    margin-bottom: 0;
+}
