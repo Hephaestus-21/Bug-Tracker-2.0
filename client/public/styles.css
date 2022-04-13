@@ -4,6 +4,10 @@ body{
 
 
 /* Bootstrap css */
+.row{
+    margin-top: 30px;
+}
+
 .fa-envelope{
     font-size: 1.8rem;
 }
@@ -13,6 +17,9 @@ body{
 .col-8{
     padding-left: 0;
     margin-bottom: 0;
+}
+div.row p:hover{
+    text-decoration: underline;
 }
 
 
@@ -50,6 +57,30 @@ div.login-title p{
 div.center-login-comp p{
     color: #d6d6d6  
 }
+
+/* Register Css */
+
+.regis-comp{
+    position: relative;
+    bottom: 240px;
+    background-color: #282d40;
+    color:white;
+    margin: 5% 500px 0px 500px;
+    padding: 30px 25px 70px 25px;
+    border: #282d40 10px solid;
+    border-radius: 10px;
+    box-shadow: 15px 15px black;
+}
+div.container h4{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.reg-btn{
+    margin-top: 30px;
+}
+
+
 
 /* Footer css */
 .footer{
