@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const UserModel = require("./models/Users")
 const key = require("./mongKey")
 
+require("dotenv").config()
 
 const app = express()
 app.use(express.json())
@@ -10,7 +11,7 @@ const cors = require("cors")
 
 app.use(cors());
 
-mongoose.connect(key.default)
+mongoose.connect(process.env.MONGOOSEURL)
 
 app.get("/",function(req,res){
     res.send("Hello! this is working")
