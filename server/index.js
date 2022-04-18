@@ -1,7 +1,6 @@
 const express = require("express")
 const mongoose = require("mongoose")
 const UserModel = require("./models/Users")
-const key = require("./mongKey")
 
 require("dotenv").config()
 
@@ -29,6 +28,7 @@ app.get("/getUsers" , function(req, res){
 
 app.post("/createUser", async function(req,res){
     const user = req.body;
+    console.log(user);
     const newUser = new UserModel(user);
     await newUser.save();
 
