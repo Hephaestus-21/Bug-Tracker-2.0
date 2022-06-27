@@ -1,21 +1,21 @@
 import {useState, useEffect} from "react";
 import Axios from "axios";
-import Login from "./components/Login"
+import Navbar from "./components/Navbar"
+import CreateTicket from "./components/Create/CreateTicket";
+import TicketLayout from "./components/Layout/TicketLayout";
 import Footer from "./components/Footer"
-import Register from "./components/Register"
-
 
 
 function App() {
 
-  const [currentState,setCurrentState] = useState("Login")
 
-  return (
+  return(
     <div>
-      {(currentState === "Login" ? <Login changeStateFn={setCurrentState} /> : <Register/> )}
-      <Footer />
+      <Navbar/>
+      <TicketLayout/>
+      <Footer/>
     </div>
-  );
+  )
 }
 
 export default App;

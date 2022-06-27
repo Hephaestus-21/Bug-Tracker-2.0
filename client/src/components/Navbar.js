@@ -6,8 +6,8 @@ function Navbar() {
 
 
   return(
-    <div className="footer">
-        <h6>Made by Matteo Giampaolo</h6>
+    <div className="navbar">
+        <h2>Bug Tracker</h2>
     </div>
   )
 }

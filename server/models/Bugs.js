@@ -1,27 +1,24 @@
 const mongoose = require("mongoose");
 
-var Schema = mongoose.Schema
-
-const UserSchema = new mongoose.Schema({
-    fname: {
+const BugSchema = new mongoose.Schema({
+    projectName: {
         type: String,
         required: true,
     },
-    lname: {
+    bugStatus:{
         type: String,
         required: true,
     },
-    email: {
+    bugText: {
         type: String,
         required: true,
     },
-    password: {
+    bugPriority: {
         type: String,
         required: true,
-    },
-    projects: [Object]
+    }
 })
 
-const UserModel = mongoose.model("users",UserSchema);
+const BugModel = mongoose.model("bug",BugSchema);
 
-module.exports = UserModel;
+module.exports = BugModel;
