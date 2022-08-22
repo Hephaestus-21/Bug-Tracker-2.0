@@ -1,26 +1,21 @@
-import react from "react";
+import react, { useState } from "react";
 import CreateTicket from "../Create/CreateTicket";
 import ShowTickets from "../Create/ShowTickets";
+import CreateLogin from "../Create/CreateLogin";
+import Axios from "axios"
 
 function TicketLayout() {
+
+  const [loggedIn, setLoginState] = useState(false);
+  const [currentUserID, setCurrentUser] = useState("");
+  const [currentUserBugArray, setUserArrayBug] = useState([])
 
 
 
   return(
-    <div className="container-fluid">
-        <div className="row row-height">
-          <div className="col">
-            <CreateTicket/>
-          </div>
-          <div className="col right">
-            <ShowTickets/>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col">
-          
-          </div>
-        </div>
+    <div className="">
+      <CreateLogin UserArrayBug={setUserArrayBug} giveID={setCurrentUser} changeLogState={setLoginState} />
+      { loggedIn ? <div><CreateTicket/><ShowTickets allBugsUser={currentUserBugArray} loggedUserID={currentUserID} /></div> : 'please log in to access features' }
     </div>
   )
 }

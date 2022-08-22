@@ -7,7 +7,8 @@ require("dotenv").config()
 
 const app = express()
 app.use(express.json())
-const cors = require("cors")
+const cors = require("cors");
+const UserModel = require("./models/Users");
 app.use(express.urlencoded( {extended: true} ));
 app.use(express.static(__dirname+'/public'));
 app.set('view engine', 'ejs');
@@ -19,7 +20,13 @@ mongoose.connect(process.env.MONGOOSEURL)
 
 let specEditBug = ""
 
-
+app.post("/getUser", function (req, res){
+    const requestedUser = (req.body);
+    UserModel.findOne({email: requestedUser.email }, function(err,results){
+        console.log(results.projects);
+        res.json(results);
+    })
+})
 
 app.post("/createBug",function(req,res){
     const bugObject = (req.body);
@@ -31,19 +38,11 @@ app.post("/createBug",function(req,res){
 app.post("/deleteBug", function(req,res){
     const specId = (req.body.bugId);
     BugModel.deleteOne({_id: specId },function(err,result){
-        res.json(result)
+        res.json(result.projects)
     })
 })
 
-app.get("/getAllBugs",function(req,res){
-    BugModel.find({},function(err,docs){
-        res.json(docs);
-    })
-})
 
-app.get("/login", function(req,res){
-    res.render("login");
-})
 
 app.post("/editBugID",function(req,res){
     specEditBug = (req.body.bugEdit)

@@ -3,15 +3,14 @@ import Axios from "axios";
 
 
 
-function ShowTickets() {
+function ShowTickets(props) {
 
-  const [bugArray, setBugArray] = useState([]);
+  const userID = props.loggedUserID
+  const bugArray = props.allBugsUser
 
-  useEffect(() => {
-    Axios.get("http://localhost:3001/getAllBugs").then(function(response){
-      setBugArray(response.data);
-    })
-  })
+  
+  
+
 
   function handleDelete(event){
     const bugId = (event.target.value)
@@ -31,7 +30,7 @@ function ShowTickets() {
 
   return(
     <div className="ticket-container">
-        <h3>Bugs</h3>
+        <h2>Bugs</h2><br/>
         {bugArray.map((x, index) => 
         <div key={index} className="bugComp">
           <div className="row">
@@ -43,13 +42,14 @@ function ShowTickets() {
             </div>
           </div>
           <p>{x.bugText}</p>
-          <p>Status: {x.bugStatus}</p>
+          <p>Status:<span>{x.bugStatus}</span></p>
           <div className="row">
             <div className="col">
-            <button onClick={handleDelete} value={x._id} type="button" className="btn btn-info">Delete</button>
+            {/* CANNOT PUT value={x._id} due to not having an id */}
+            <button onClick={handleDelete}  type="button" className="bug-comp-btn">Delete</button>
             </div>
             <div className="col text-end">
-              <a href="http://localhost:3001/editBug"><button onClick={handleEdit} value={x._id} className="btn btn-info" type="button">Edit</button></a>
+              <a href="http://localhost:3001/editBug"><button onClick={handleEdit} value={x._id} className="bug-comp-btn" type="button">Edit</button></a>
             </div>
           </div>
 
