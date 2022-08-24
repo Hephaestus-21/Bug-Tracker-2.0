@@ -15,7 +15,7 @@ function TicketLayout() {
   return(
     <div className="">
       <CreateLogin UserArrayBug={setUserArrayBug} giveID={setCurrentUser} changeLogState={setLoginState} />
-      { loggedIn ? <div><CreateTicket/><ShowTickets allBugsUser={currentUserBugArray} loggedUserID={currentUserID} /></div> : 'please log in to access features' }
+      { loggedIn ? <div><ShowTickets allBugsUser={currentUserBugArray} loggedUserID={currentUserID} /></div> : 'please log in to access features' }
     </div>
   )
 }

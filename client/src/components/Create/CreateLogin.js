@@ -25,8 +25,6 @@ function CreateLogin(props) {
       const tempHoldID = response.data._id;
       props.giveID(tempHoldID);
 
-      props.UserArrayBug(response.data.projects)
-
       setFullName([response.data.fname,response.data.lname])
       setHidden(true);
       setWelcHidden(false);

@@ -1,11 +1,13 @@
 import react, { useState } from "react";
 import Axios from 'axios';
 
-function CreateTicket() {
+function CreateTicket(props) {
   const [bugName, setBugName] = useState("");
   const [bugStatus, setBugStatus] = useState("Open");
   const [bugText, setBugText] = useState("");
   const [bugPriority, setBugPriority] = useState("Low");
+
+  const currentUserID = props.currentID; 
 
   
   function nameChange(event){
@@ -24,11 +26,14 @@ function CreateTicket() {
   }
 
   function handleClick(){
-    console.log({Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority})
-    Axios.post("http://localhost:3001/createBug", {Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority}).then(function (response) {
-      console.log(response.data);
+    const newObjectTicket = {projectName:bugName, bugStatus:bugStatus, bugText:bugText, bugPriority:bugPriority};
+    Axios.post("http://localhost:3001/createBug", {Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority, userIDBase:currentUserID}).then(function (response) {
+      console.log(response.data)
     })
-    window.location.reload()
+    const ArrayUser = props.userArray
+    console.log(newObjectTicket);
+    console.log(ArrayUser);
+    props.setUserArray([...ArrayUser, newObjectTicket]);
   }
 
   return(

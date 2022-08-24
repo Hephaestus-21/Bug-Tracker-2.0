@@ -23,16 +23,34 @@ let specEditBug = ""
 app.post("/getUser", function (req, res){
     const requestedUser = (req.body);
     UserModel.findOne({email: requestedUser.email }, function(err,results){
-        console.log(results.projects);
         res.json(results);
     })
 })
 
+app.post("/getUserTickets", function (req, res){
+    const requestedUser = (req.body.userID);
+    UserModel.findById(requestedUser, function(err,results){
+        res.json(results);
+    })
+})
+
+
 app.post("/createBug",function(req,res){
     const bugObject = (req.body);
-    const newBug = new BugModel({projectName:bugObject.Name, bugStatus:bugObject.Status, bugText:bugObject.Text, bugPriority:bugObject.Priority});
-    console.log(newBug);
-    newBug.save();
+    console.log(bugObject);
+    const newTicket = {projectName:bugObject.Name, bugStatus:bugObject.Status, bugText:bugObject.Text, bugPriority:bugObject.Priority}
+
+    UserModel.findOneAndUpdate(
+    { _id: bugObject.userIDBase }, 
+    { $push: { projects: newTicket  } },
+    function (error, results) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(results);
+        }
+    });
+    
 })
 
 app.post("/deleteBug", function(req,res){
