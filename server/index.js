@@ -1,6 +1,6 @@
 const express = require("express")
 const mongoose = require("mongoose")
-const BugModel = require("./models/Bugs")
+const BugModel = require("./models/Bugs");
 let ejs = require('ejs');
 
 require("dotenv").config()
@@ -37,7 +37,6 @@ app.post("/getUserTickets", function (req, res){
 
 app.post("/createBug",function(req,res){
     const bugObject = (req.body);
-    console.log(bugObject);
     const newTicket = {projectName:bugObject.Name, bugStatus:bugObject.Status, bugText:bugObject.Text, bugPriority:bugObject.Priority}
 
     UserModel.findOneAndUpdate(
@@ -47,16 +46,20 @@ app.post("/createBug",function(req,res){
         if (error) {
             console.log(error);
         } else {
-            console.log(results);
+            console.log("New bug successfully added.");
         }
     });
     
 })
 
 app.post("/deleteBug", function(req,res){
-    const specId = (req.body.bugId);
-    BugModel.deleteOne({_id: specId },function(err,result){
-        res.json(result.projects)
+    requestedBugID = req.body;
+    UserModel.findOneAndUpdate({ _id: requestedBugID.userID }, { $pull: { projects: { _id: requestedBugID.bugId } }}, function(err, obj) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("New bug successfully deleted.");
+        }
     })
 })
 

@@ -4,6 +4,7 @@ import CreateTicket from "../Create/CreateTicket";
 
 
 
+
 function ShowTickets(props) {
 
   const userID = props.loggedUserID
@@ -11,7 +12,6 @@ function ShowTickets(props) {
 
   useEffect(() => {
     Axios.post("http://localhost:3001/getUserTickets", {userID} ).then(function(response){
-      console.log(response);
       setBugArray(response.data.projects)
     })
   }, []);
@@ -20,10 +20,13 @@ function ShowTickets(props) {
 
   function handleDelete(event){
     const bugId = (event.target.value)
-    Axios.post("http://localhost:3001/deleteBug", {bugId} ).then(function(response){
-      console.log(response);
-      window.location.reload()
+    Axios.post("http://localhost:3001/deleteBug", {bugId, userID} ).then(function(response){
+  
     })
+    console.log(bugArray.map((x) => console.log(x._id)))
+    console.log(bugId)
+    setBugArray(bugArray.filter(bug => bug._id !== bugId));
+    console.log(bugArray)
   }
 
   function handleEdit(event){
@@ -54,10 +57,10 @@ function ShowTickets(props) {
             <div className="row">
               <div className="col">
               {/* CANNOT PUT value={x._id} due to not having an id */}
-              <button onClick={handleDelete}  type="button" className="bug-comp-btn">Delete</button>
+              <button onClick={handleDelete} value={x._id}  type="button" className="bug-comp-btn">Delete</button>
               </div>
               <div className="col text-end">
-                <a href="http://localhost:3001/editBug"><button onClick={handleEdit} value={x._id} className="bug-comp-btn" type="button">Edit</button></a>
+                <a href="http://localhost:3001/editBug"><button onClick={handleEdit} value={x.bugId} className="bug-comp-btn" type="button">Edit</button></a>
               </div>
             </div>
 

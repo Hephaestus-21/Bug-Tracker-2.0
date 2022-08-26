@@ -26,6 +26,7 @@ function CreateTicket(props) {
   }
 
   function handleClick(){
+    // const newBugId = nanoid()
     const newObjectTicket = {projectName:bugName, bugStatus:bugStatus, bugText:bugText, bugPriority:bugPriority};
     Axios.post("http://localhost:3001/createBug", {Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority, userIDBase:currentUserID}).then(function (response) {
       console.log(response.data)

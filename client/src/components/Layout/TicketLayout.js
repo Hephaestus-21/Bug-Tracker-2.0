@@ -1,5 +1,4 @@
 import react, { useState } from "react";
-import CreateTicket from "../Create/CreateTicket";
 import ShowTickets from "../Create/ShowTickets";
 import CreateLogin from "../Create/CreateLogin";
 import Axios from "axios"
@@ -8,14 +7,13 @@ function TicketLayout() {
 
   const [loggedIn, setLoginState] = useState(false);
   const [currentUserID, setCurrentUser] = useState("");
-  const [currentUserBugArray, setUserArrayBug] = useState([])
 
 
 
   return(
     <div className="">
-      <CreateLogin UserArrayBug={setUserArrayBug} giveID={setCurrentUser} changeLogState={setLoginState} />
-      { loggedIn ? <div><ShowTickets allBugsUser={currentUserBugArray} loggedUserID={currentUserID} /></div> : 'please log in to access features' }
+      <CreateLogin giveID={setCurrentUser} changeLogState={setLoginState} />
+      { loggedIn ? <div><ShowTickets loggedUserID={currentUserID} /></div> : 'please log in to access features' }
     </div>
   )
 }
