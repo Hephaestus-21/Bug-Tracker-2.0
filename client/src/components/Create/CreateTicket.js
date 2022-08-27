@@ -7,6 +7,7 @@ function CreateTicket(props) {
   const [bugText, setBugText] = useState("");
   const [bugPriority, setBugPriority] = useState("Low");
 
+
   const currentUserID = props.currentID; 
 
   
@@ -26,15 +27,22 @@ function CreateTicket(props) {
   }
 
   function handleClick(){
-    // const newBugId = nanoid()
-    const newObjectTicket = {projectName:bugName, bugStatus:bugStatus, bugText:bugText, bugPriority:bugPriority};
+
     Axios.post("http://localhost:3001/createBug", {Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority, userIDBase:currentUserID}).then(function (response) {
-      console.log(response.data)
-    })
-    const ArrayUser = props.userArray
-    console.log(newObjectTicket);
-    console.log(ArrayUser);
-    props.setUserArray([...ArrayUser, newObjectTicket]);
+      
+      
+    });
+
+    Axios.post("http://localhost:3001/getUserTickets", {userID: currentUserID} ).then(function(response){
+        const projectArray = (response.data.projects);
+        console.log(projectArray)
+        console.log(projectArray.length)
+        const newObjectTicket = (projectArray[projectArray.length -1 ]);
+        const ArrayUser = props.userArray;
+        props.setUserArray([...ArrayUser, newObjectTicket]);
+    });
+
+    
   }
 
   return(

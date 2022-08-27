@@ -46,15 +46,19 @@ app.post("/createBug",function(req,res){
         if (error) {
             console.log(error);
         } else {
-            console.log("New bug successfully added.");
+            console.log("Bug Created");
         }
     });
     
 })
 
+
 app.post("/deleteBug", function(req,res){
-    requestedBugID = req.body;
-    UserModel.findOneAndUpdate({ _id: requestedBugID.userID }, { $pull: { projects: { _id: requestedBugID.bugId } }}, function(err, obj) {
+    requestedBugID = req.body.bugID;
+    requestedUserID = req.body.currentUserID;
+    console.log(requestedBugID);
+    console.log(requestedUserID);
+    UserModel.findOneAndUpdate({ _id: requestedUserID }, { $pull: { projects: { _id: requestedBugID } }}, function(err, obj) {
         if (err) {
             console.log(err);
         } else {
