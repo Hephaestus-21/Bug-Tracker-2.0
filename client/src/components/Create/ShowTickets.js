@@ -1,6 +1,7 @@
 import react,{useEffect, useState} from "react";
 import Axios from "axios";
 import CreateTicket from "../Create/CreateTicket";
+import EditBugs from "./EditBugs";
 
 
 
@@ -9,6 +10,13 @@ function ShowTickets(props) {
 
   const userID = props.loggedUserID
   const [bugArray, setBugArray ] = useState([])
+  const [isHidden, setHidden] = useState(false);
+
+
+  
+  // just for edit bugs
+  const [ticketBugID, setID] = useState("")
+  const [editProjObj, setObj] = useState({});
 
   useEffect(() => {
     Axios.post("http://localhost:3001/getUserTickets", {userID} ).then(function(response){
@@ -27,17 +35,27 @@ function ShowTickets(props) {
   }
 
   function handleEdit(event){
-    const bugEdit = event.target.value
-    Axios.post("http://localhost:3001/editBugID",{bugEdit}).then(function(response){
-      console.log("ollo")
+    setID(event.target.value);
+    Axios.post("http://localhost:3001/getSpecificTicket", {ticketID:event.target.value , userId:userID }).then(function(response){
+      response.data.projects.map(function(x, index){
+        if (x._id === event.target.value){
+          setObj(response.data.projects[index]);
+          setHidden(true);
+        }else {
+          console.log("Still looking for bug")
+
+        }
+
+      });
     })
+    window.scrollTo(0, document.body.scrollHeight);
   }
 
 
   return(
     <div>
-      <CreateTicket userArray={bugArray} setUserArray={setBugArray} currentID={userID} />
-      <div className="ticket-container">
+      <div hidden={isHidden}><CreateTicket userArray={bugArray} setUserArray={setBugArray} currentID={userID} /></div>
+      <div hidden={isHidden} className="ticket-container">
           <h2>Bugs</h2><br/>
           {bugArray.map((x, index) => 
           <div key={index} className="bugComp">
@@ -57,13 +75,14 @@ function ShowTickets(props) {
               <button onClick={handleDelete} value={x._id}  type="button" className="bug-comp-btn">Delete</button>
               </div>
               <div className="col text-end">
-                <a href="http://localhost:3001/editBug"><button onClick={handleEdit} name={x.bugId} className="bug-comp-btn" type="button">Edit</button></a>
+                <button onClick={handleEdit} value={x._id} className="bug-comp-btn" type="button">Edit</button>
               </div>
             </div>
 
           </div>
           )}
       </div>
+      { isHidden ? <div><EditBugs userID={userID} editProjObj={editProjObj} bugID={ticketBugID} /></div> : <div></div> }
     </div>
     
   )

@@ -19,6 +19,7 @@ function CreateLogin(props) {
   };
 
   function handleClick(){
+    console.log(userObject)
     Axios.post("http://localhost:3001/getUser", userObject).then(function (response){
 
       // gets id of the user requested, which will then later be used to get all the bugs for that user

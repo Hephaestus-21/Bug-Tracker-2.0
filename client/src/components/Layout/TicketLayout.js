@@ -1,7 +1,7 @@
 import react, { useState } from "react";
 import ShowTickets from "../Create/ShowTickets";
 import CreateLogin from "../Create/CreateLogin";
-import Axios from "axios"
+import CreateRegistor from "../Create/CreateRegistor";
 
 function TicketLayout() {
 
@@ -12,7 +12,8 @@ function TicketLayout() {
 
   return(
     <div className="">
-      <CreateLogin giveID={setCurrentUser} changeLogState={setLoginState} />
+      <CreateRegistor />
+      <div ><CreateLogin giveID={setCurrentUser} changeLogState={setLoginState} /></div>
       { loggedIn ? <div><ShowTickets loggedUserID={currentUserID} /></div> : 'please log in to access features' }
     </div>
   )

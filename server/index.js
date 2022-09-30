@@ -19,6 +19,7 @@ mongoose.connect(process.env.MONGOOSEURL)
 
 
 let specEditBug = ""
+let currentIDUser = ""
 
 app.post("/getUser", function (req, res){
     const requestedUser = (req.body);
@@ -32,6 +33,35 @@ app.post("/getUserTickets", function (req, res){
     UserModel.findById(requestedUser, function(err,results){
         res.json(results);
     })
+})
+
+app.post("/getSpecificTicket", function (req, res){
+    const requestedTicketID = req.body.ticketID;
+    UserModel.findById(req.body.userId, function(err,results){
+        res.json(results)
+    })
+})
+
+app.post("/createNewUser", function(req, res){
+    const reqUser = (req.body.newUserDoc)
+    const newUser = new UserModel({
+        fname: reqUser.fname,
+        lname: reqUser.lname,
+        email: reqUser.email,
+        password: reqUser.password,
+        projects: [
+            {
+                projectName: "Welcome to the Bug Tracker",
+                bugStatus: "Completed",
+                bugText: "This is a demo bug.",
+                bugPriority: "Low"
+            }
+        ]
+        // fix this
+    });
+
+    newUser.save();
+    res.json("User created.")
 })
 
 
@@ -69,32 +99,27 @@ app.post("/deleteBug", function(req,res){
 
 
 
-app.post("/editBugID",function(req,res){
-    specEditBug = (req.body.bugEdit)
-})
 
-app.get("/editBug",function(req,res){
-    BugModel.find({_id:specEditBug},function(err,docs){
-        const [projName,bugStat,bugDesc,bugPrior,bugId] = [docs[0].projectName, docs[0].bugStatus, docs[0].bugText, docs[0].bugPriority,docs[0]._id ]
-        res.render("index",{Name:projName, Status:bugStat, Description:bugDesc,Priority:bugPrior,ID:bugId});
-    });
 
-})
+// app.get("/editBug",function(req,res){
+//     UserModel.findById(currentIDUser, function(err,results){
+//         results.projects.map(function(x){
+//             if (x._id == specEditBug){
+//                 res.render("index",{Name:x.projectName, Status:x.bugStatus, Description:x.bugText, Priority:x.bugPriority, ID:x._id})
+//             }else {
+//                 console.log("still searching.")
+//             }
+//         })
+//     })
+
+// })
 
 app.post("/changeBug",function(req,res){
-    console.log("yay");
-    console.log(req.body)
-    const editId = (req.body.buttonEJS);
-    BugModel.findByIdAndUpdate( editId, {projectName: req.body.bugNameEJS, bugStatus: req.body.bugStatEJS, bugText: req.body.bugDescEJS, bugPriority: req.body.bugPriorEJS,}, function(err,docs){
-        if (err){
-            console.log(err);
-        }else{
-            console.log("Updated User: ", docs);
-            res.redirect("http://localhost:3000");
-        }
+    console.log(req.body.editNewObject.nameTick);
+    UserModel.findOneAndUpdate({_id: req.body.currentUser, 'projects._id': req.body.bugID}, { $set: { "projects.$.projectName": req.body.editNewObject.nameTick, "projects.$.bugStatus" :req.body.editNewObject.statTick, "projects.$.bugText":req.body.editNewObject.textTick , "projects.$.bugPriority": req.body.editNewObject.priorTick }}, function(err, results){
+        console.log(results)
     })
-    // BugModel.findByIdAndUpdate
-})
+});
 
 app.listen(3001,function(){
     console.log("Server is running succesfully on port: 3001")
