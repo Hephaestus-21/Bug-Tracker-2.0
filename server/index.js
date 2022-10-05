@@ -48,18 +48,9 @@ app.post("/createNewUser", function(req, res){
         fname: reqUser.fname,
         lname: reqUser.lname,
         email: reqUser.email,
-        password: reqUser.password,
-        projects: [
-            {
-                projectName: "Welcome to the Bug Tracker",
-                bugStatus: "Completed",
-                bugText: "This is a demo bug.",
-                bugPriority: "Low"
-            }
-        ]
-        // fix this
+        password: reqUser.password
     });
-
+    // dont need to specify the projects, can be seen as re assigning to an already set variable/const.
     newUser.save();
     res.json("User created.")
 })
@@ -76,7 +67,7 @@ app.post("/createBug",function(req,res){
         if (error) {
             console.log(error);
         } else {
-            console.log("Bug Created");
+            res.json(results);
         }
     });
     

@@ -7,6 +7,9 @@ function CreateTicket(props) {
   const [bugText, setBugText] = useState("");
   const [bugPriority, setBugPriority] = useState("Low");
 
+  const [isWait, setWait] = useState(false);
+  // for database to create ticket
+
 
   const currentUserID = props.currentID; 
 
@@ -28,21 +31,34 @@ function CreateTicket(props) {
 
   function handleClick(){
 
-    Axios.post("http://localhost:3001/createBug", {Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority, userIDBase:currentUserID}).then(function (response) {
-      
+    Axios.post("http://localhost:3001/createBug", {Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority, userIDBase:currentUserID}).then(function (res) {
+      console.log("Bug created in the backend.")
+      console.log(res.data);
+      setWait(true);
+      // Axios.post("http://localhost:3001/getUserTickets", {userID: currentUserID} ).then(function(response){
+      //   const projectArray = (response.data.projects);
+      //   console.log(projectArray)
+      //   console.log(projectArray.length)
+      //   const newObjectTicket = (projectArray[projectArray.length - 1]);
+      //   const ArrayUser = props.userArray;
+      //   props.setUserArray([...ArrayUser, newObjectTicket]);
+      // });
       
     });
 
+  }
+  if ( isWait === true ){
+    setWait(false);
     Axios.post("http://localhost:3001/getUserTickets", {userID: currentUserID} ).then(function(response){
-        const projectArray = (response.data.projects);
-        console.log(projectArray)
-        console.log(projectArray.length)
-        const newObjectTicket = (projectArray[projectArray.length -1 ]);
-        const ArrayUser = props.userArray;
-        props.setUserArray([...ArrayUser, newObjectTicket]);
+      const projectArray = (response.data.projects);
+      console.log(projectArray)
+      console.log(projectArray.length)
+      const newObjectTicket = (projectArray[projectArray.length - 1]);
+      const ArrayUser = props.userArray;
+      props.setUserArray([...ArrayUser, newObjectTicket]);
     });
+  } else{
 
-    
   }
 
   return(
