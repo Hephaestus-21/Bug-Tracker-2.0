@@ -21,10 +21,15 @@ mongoose.connect(process.env.MONGOOSEURL)
 let specEditBug = ""
 let currentIDUser = ""
 
-app.post("/getUser", function (req, res){
+app.post("/getUserLogin", function (req, res){
     const requestedUser = (req.body);
-    UserModel.findOne({email: requestedUser.email }, function(err,results){
-        res.json(results);
+    console.log(requestedUser)
+    UserModel.findOne({email: requestedUser.email, password: requestedUser.password }, function(err,results){
+        if (err){
+            console.log("Incorrect email or password")
+        }else{
+            res.json(results);
+        }
     })
 })
 

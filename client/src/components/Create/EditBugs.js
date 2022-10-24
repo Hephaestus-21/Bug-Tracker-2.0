@@ -9,6 +9,7 @@ function EditBugs(props) {
   const [editText, setText] = useState(props.editProjObj.bugText);
   const [editStatus, setStatus] = useState("Open");
   const [editPriority, setPriority] = useState("Low");
+  const [isEditWait, setEditWait] = useState(false)
 
   const ref = useRef(null);
 
@@ -34,9 +35,24 @@ function EditBugs(props) {
     Axios.post("http://localhost:3001/changeBug", {currentUser:userId, editNewObject: editNewObject, bugID: ticketID }).then(function(response){
       console.log(response.data);
     })
+    setEditWait(true);
 
+   
   }
 
+
+  if ( isEditWait === true ){
+    const currentUser = props.userID
+    setEditWait(false);
+    Axios.post("http://localhost:3001/getUserTickets", {userID: currentUser } ).then(function(response){
+      const projectArray = (response.data.projects);
+      console.log(projectArray)
+      props.setUserArray(projectArray);
+    });
+    props.changeHidden(false)
+  } else{
+
+  }
   
 
   return(

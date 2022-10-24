@@ -1,7 +1,7 @@
 import react,{useEffect, useState} from "react";
 import Axios from "axios";
 
-function CreateRegistor(){
+function CreateRegistor(props){
 
     const [newFName, setFName] = useState("");
     const [newLName, setLName] = useState("");
@@ -14,6 +14,11 @@ function CreateRegistor(){
             console.log(response);
         })
     }
+    
+    function handleAccount(){
+        props.setHide(false)
+    }
+
 
     return(
         <div className="ticket-container">
@@ -48,7 +53,8 @@ function CreateRegistor(){
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col"><button onClick={handleRegister} type="button" className="my-btn">Login</button></div>
+                    <div className="col"><button onClick={handleRegister} type="button" className="my-btn">Register</button></div>
+                    <div className="col"><button onClick={handleAccount} type="button" className="my-btn">Already have an account</button></div>
                 </div>
             </form>
         </div>

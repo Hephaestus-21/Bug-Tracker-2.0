@@ -6,14 +6,15 @@ import CreateRegistor from "../Create/CreateRegistor";
 function TicketLayout() {
 
   const [loggedIn, setLoginState] = useState(false);
+  const [isHide, setHide] = useState(true);
   const [currentUserID, setCurrentUser] = useState("");
 
 
 
   return(
     <div className="">
-      <CreateRegistor />
-      <div ><CreateLogin giveID={setCurrentUser} changeLogState={setLoginState} /></div>
+      <div hidden={!isHide}><CreateRegistor setHide={setHide} /></div>
+      <div hidden={isHide}><CreateLogin setHide={setHide} giveID={setCurrentUser} changeLogState={setLoginState} /></div>
       { loggedIn ? <div><ShowTickets loggedUserID={currentUserID} /></div> : 'please log in to access features' }
     </div>
   )

@@ -82,7 +82,7 @@ function ShowTickets(props) {
           </div>
           )}
       </div>
-      { isHidden ? <div><EditBugs userID={userID} editProjObj={editProjObj} bugID={ticketBugID} /></div> : <div></div> }
+      { isHidden ? <div><EditBugs setUserArray={setBugArray} changeHidden={setHidden} userID={userID} editProjObj={editProjObj} bugID={ticketBugID} /></div> : <div></div> }
     </div>
     
   )

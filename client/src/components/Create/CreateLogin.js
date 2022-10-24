@@ -20,7 +20,7 @@ function CreateLogin(props) {
 
   function handleClick(){
     console.log(userObject)
-    Axios.post("http://localhost:3001/getUser", userObject).then(function (response){
+    Axios.post("http://localhost:3001/getUserLogin", userObject).then(function (response){
 
       // gets id of the user requested, which will then later be used to get all the bugs for that user
       const tempHoldID = response.data._id;
@@ -31,6 +31,11 @@ function CreateLogin(props) {
       setWelcHidden(false);
       props.changeLogState(true);
     })
+  }
+  
+  
+  function handleAccount(){
+    props.setHide(true)
   }
 
 
@@ -56,6 +61,7 @@ function CreateLogin(props) {
           </div>
           <div className="row">
               <div className="col"><button onClick={handleClick} type="button" value={userObject} className="my-btn">Login</button></div>
+              <div className="col"><button onClick={handleAccount} type="button" className="my-btn">Create an Account?</button></div>
           </div>
         </form>
       </div>
