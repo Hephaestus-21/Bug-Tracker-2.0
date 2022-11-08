@@ -19,7 +19,7 @@ function ShowTickets(props) {
   const [editProjObj, setObj] = useState({});
 
   useEffect(() => {
-    Axios.post("http://localhost:3001/getUserTickets", {userID} ).then(function(response){
+    Axios.post("http://localhost:3001/getUserByID", {userID} ).then(function(response){
       setBugArray(response.data.projects)
     })
   }, []);
@@ -36,7 +36,7 @@ function ShowTickets(props) {
 
   function handleEdit(event){
     setID(event.target.value);
-    Axios.post("http://localhost:3001/getSpecificTicket", {ticketID:event.target.value , userId:userID }).then(function(response){
+    Axios.post("http://localhost:3001/getUserByID", { userID:userID }).then(function(response){
       response.data.projects.map(function(x, index){
         if (x._id === event.target.value){
           setObj(response.data.projects[index]);

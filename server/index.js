@@ -33,19 +33,19 @@ app.post("/getUserLogin", function (req, res){
     })
 })
 
-app.post("/getUserTickets", function (req, res){
+app.post("/getUserByID", function (req, res){
     const requestedUser = (req.body.userID);
     UserModel.findById(requestedUser, function(err,results){
         res.json(results);
     })
 })
 
-app.post("/getSpecificTicket", function (req, res){
-    const requestedTicketID = req.body.ticketID;
-    UserModel.findById(req.body.userId, function(err,results){
-        res.json(results)
-    })
-})
+// app.post("/getSpecificTicket", function (req, res){
+//     const requestedTicketID = req.body.ticketID;
+//     UserModel.findById(req.body.userId, function(err,results){
+//         res.json(results)
+//     })
+// })
 
 app.post("/createNewUser", function(req, res){
     const reqUser = (req.body.newUserDoc)

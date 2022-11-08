@@ -44,7 +44,7 @@ function EditBugs(props) {
   if ( isEditWait === true ){
     const currentUser = props.userID
     setEditWait(false);
-    Axios.post("http://localhost:3001/getUserTickets", {userID: currentUser } ).then(function(response){
+    Axios.post("http://localhost:3001/getUserByID", {userID: currentUser } ).then(function(response){
       const projectArray = (response.data.projects);
       console.log(projectArray)
       props.setUserArray(projectArray);

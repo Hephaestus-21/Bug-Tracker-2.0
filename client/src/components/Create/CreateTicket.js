@@ -49,7 +49,7 @@ function CreateTicket(props) {
   }
   if ( isWait === true ){
     setWait(false);
-    Axios.post("http://localhost:3001/getUserTickets", {userID: currentUserID} ).then(function(response){
+    Axios.post("http://localhost:3001/getUserByID", {userID: currentUserID} ).then(function(response){
       const projectArray = (response.data.projects);
       console.log(projectArray)
       console.log(projectArray.length)
