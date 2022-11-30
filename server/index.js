@@ -60,6 +60,25 @@ app.post("/createNewUser", function(req, res){
     res.json("User created.")
 })
 
+app.post("/createProject",function(req,res){
+    const projectObject = (req.body);
+    const newProject = {projectName:projectObject.name, projectOwner:projectObject.owner, projectBugs:[] }
+    console.log(newProject);
+
+    UserModel.findOneAndUpdate(
+        { _id: projectObject.userIDBase }, 
+        { $push: { projects: newProject  } },
+        function (error, results) {
+            if (error) {
+                console.log(error);
+            } else {
+                res.json(results);
+            }
+    });
+
+    // Work on adding create bug ting ye
+
+})
 
 app.post("/createBug",function(req,res){
     const bugObject = (req.body);

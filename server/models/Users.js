@@ -24,21 +24,32 @@ const UserSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        bugStatus:{
+        projectOwner: {
             type: String,
             required: true,
         },
-        bugText: {
-            type: String,
-            required: true,
-        },
-        bugPriority: {
-            type: String,
-            required: true,
-        }
+        projectBugs: [{
+            bugName: {
+                type: String,
+                required: true,
+            },
+            bugStatus:{
+                type: String,
+                required: true,
+            },
+            bugText: {
+                type: String,
+                required: true,
+            },
+            bugPriority: {
+                type: String,
+                required: true,
+            }
+        }],
     }]
 })
 
 const UserModel = mongoose.model("users",UserSchema);
 
 module.exports = UserModel;
+

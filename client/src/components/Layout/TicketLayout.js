@@ -1,5 +1,5 @@
 import react, { useState } from "react";
-import ShowTickets from "../Create/ShowTickets";
+import ShowProjects from "../Create/ShowProjects";
 import CreateLogin from "../Create/CreateLogin";
 import CreateRegistor from "../Create/CreateRegistor";
 
@@ -15,7 +15,7 @@ function TicketLayout() {
     <div className="">
       <div hidden={!isHide}><CreateRegistor setHide={setHide} /></div>
       <div hidden={isHide}><CreateLogin setHide={setHide} giveID={setCurrentUser} changeLogState={setLoginState} /></div>
-      { loggedIn ? <div><ShowTickets loggedUserID={currentUserID} /></div> : 'please log in to access features' }
+      { loggedIn ? <div><ShowProjects loggedUserID={currentUserID} /></div> : 'please log in to access features' }
     </div>
   )
 }
