@@ -1,4 +1,5 @@
 import react,{useEffect, useState} from "react";
+import CreateTicket from "./CreateTicket";
 import Axios from "axios";
 
 function OneProject (props){
@@ -28,6 +29,7 @@ function OneProject (props){
 
     return(
         <div>
+            <CreateTicket currentProj={selectedProj} userArray={bugArray} setUserArray={setBugArray} currentID={userID} />
             <div className="ticket-container">
                 <div className="row">
                     <div className="col-8"><h2>{selectedProj.projectName}</h2></div>

@@ -65,6 +65,8 @@ app.post("/createProject",function(req,res){
     const newProject = {projectName:projectObject.name, projectOwner:projectObject.owner, projectBugs:[] }
     console.log(newProject);
 
+    
+
     UserModel.findOneAndUpdate(
         { _id: projectObject.userIDBase }, 
         { $push: { projects: newProject  } },
@@ -82,18 +84,46 @@ app.post("/createProject",function(req,res){
 
 app.post("/createBug",function(req,res){
     const bugObject = (req.body);
-    const newTicket = {projectName:bugObject.Name, bugStatus:bugObject.Status, bugText:bugObject.Text, bugPriority:bugObject.Priority}
+    const projectID = bugObject.currentProjID._id
+    const newTicket = {bugName:bugObject.Name, bugStatus:bugObject.Status, bugText:bugObject.Text, bugPriority:bugObject.Priority}
 
-    UserModel.findOneAndUpdate(
-    { _id: bugObject.userIDBase }, 
-    { $push: { projects: newTicket  } },
-    function (error, results) {
-        if (error) {
-            console.log(error);
-        } else {
-            res.json(results);
+    // let projIndex = 0
+
+    // UserModel.findById(bugObject.userIDBase, function(err,results){
+    //     results.projects.map(function(x,index){
+    //         // console.log(x._id)
+    //         // console.log(index)
+    //         if (x._id == projectID){
+    //             projIndex = index;
+    //             console.log(projIndex);
+    //         }else{
+
+    //         }
+    //     });
+    // })
+    console.log(bugObject)
+    console.log(projectID)
+    console.log(bugObject.userIDBase)
+
+    UserModel.updateOne(
+        { "_id": bugObject.userIDBase, "projects._id": projectID}, 
+        { "$push": { "projects.$.projectBugs" : {"bugName":bugObject.Name, "bugStatus":bugObject.Status, "bugText":bugObject.Text, "bugPriority":bugObject.Priority}  } },
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                console.log(results)
+            }
         }
-    });
+        
+    );
+
+    // UserModel.findOneAndUpdate(
+    // { "_id": bugObject.userIDBase}, 
+    // { "$push": { "projects.$[i].projectBugs" : newTicket  } },
+    // { arrayFilters: [{'i._id': projIndex,},],}
+    
+    // );
     
 })
 
