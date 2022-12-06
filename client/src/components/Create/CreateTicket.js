@@ -33,33 +33,31 @@ function CreateTicket(props) {
   function handleClick(){
 
     Axios.post("http://localhost:3001/createBug", {Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority, userIDBase:currentUserID, currentProjID:currentProjectID}).then(function (res) {
-      console.log("Bug created in the backend.")
-      setWait(true);
-    //   Axios.post("http://localhost:3001/getUserTickets", {userID: currentUserID} ).then(function(response){
-    //     const projectArray = (response.data.projects);
-    //     console.log(projectArray)
-    //     console.log(projectArray.length)
-    //     const newObjectTicket = (projectArray[projectArray.length - 1]);
-    //     const ArrayUser = props.userArray;
-    //     props.setUserArray([...ArrayUser, newObjectTicket]);
-    //   });
-      
+      console.log(res.data);  
+      setWait(true)
     });
-
   }
-  if ( isWait === true ){
-    setWait(false);
+
+  if (isWait){
     Axios.post("http://localhost:3001/getUserByID", {userID: currentUserID} ).then(function(response){
       const projectArray = (response.data.projects);
-      console.log(projectArray)
-      console.log(projectArray.length)
-      const newObjectTicket = (projectArray[projectArray.length - 1]);
-      const ArrayUser = props.userArray;
-      props.setUserArray([...ArrayUser, newObjectTicket]);
-    });
-  } else{
+      projectArray.map( function(x){
+        if (currentProjectID._id === x._id ) {
+          // used to find the latest bug added
+          const newObjectTicket = (x.projectBugs[x.projectBugs.length -1]);
+          const ArrayUser = props.userArray;
+          props.setUserArray([...ArrayUser, newObjectTicket]);
+        }else{
 
+        }
+      })
+    });
+    setWait(false)
+  }else{
+    
   }
+
+
 
   return(
     <div className="ticket-container">
