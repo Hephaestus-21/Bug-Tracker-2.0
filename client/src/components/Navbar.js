@@ -7,7 +7,7 @@ function Navbar() {
 
   return(
     <div className="navbar">
-        <h1>Bug Tracker</h1>
+        <h1>Bug Tracker 2</h1>
     </div>
   )
 }

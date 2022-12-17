@@ -15,21 +15,21 @@ app.set('view engine', 'ejs');
 
 app.use(cors());
 
-mongoose.connect(process.env.MONGOOSEURL)
-
-// idk
-
-let specEditBug = ""
-let currentIDUser = ""
+// mongoose.connect(process.env.MONGOOSEURL)
+mongoose.set("strictQuery", false);
+mongoose.connect(process.env.MONGOOSEURL, () => {
+  console.log("Connected to MongoDB");
+});
 
 app.post("/getUserLogin", function (req, res){
     const requestedUser = (req.body);
     console.log(requestedUser)
     UserModel.findOne({email: requestedUser.email, password: requestedUser.password }, function(err,results){
         if (err){
-            console.log("Incorrect email or password")
+            console.log(err)
         }else{
-            res.json(results);
+            console.log(results)
+            res.send(results);
         }
     })
 })
