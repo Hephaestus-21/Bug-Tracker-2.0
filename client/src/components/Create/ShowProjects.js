@@ -26,13 +26,13 @@ function ShowProjects(props) {
   
 
 
-  function handleDelete(event){
-    const bugId = event.target.value;
-    Axios.post("http://localhost:3001/deleteBug", {bugID: bugId, currentUserID: userID} ).then(function(response){
+  // function handleDelete(event){
+  //   const bugId = event.target.value;
+  //   Axios.post("http://localhost:3001/deleteBug", {bugID: bugId, currentUserID: userID} ).then(function(response){
   
-    })
-    setProjectArray(projectArray.filter(bug => bug._id !== bugId));
-  }
+  //   })
+  //   setProjectArray(projectArray.filter(bug => bug._id !== bugId));
+  // }
 
   // function handleEdit(event){
   //   setID(event.target.value);
@@ -75,7 +75,7 @@ function ShowProjects(props) {
             </div>
             <div className="row">
               <div className="col">
-              <button onClick={handleDelete} value={x._id}  type="button" className="bug-comp-btn">Delete</button>
+              <button value={x._id}  type="button" className="bug-comp-btn">Delete</button>
               </div>
               <div className="col text-end">
                 <button onClick={handleView} value={x._id} className="bug-comp-btn" type="button">View Project</button>

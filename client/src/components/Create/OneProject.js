@@ -27,6 +27,15 @@ function OneProject (props){
 
     }
 
+    function handleDelete(event){
+        const bugId = event.target.value;
+        console.log(bugId)
+        Axios.post("http://localhost:3001/deleteBug", {bugID: bugId, currentUserID: userID, currentProjID: selectedProj } ).then(function(response){
+      
+        })
+        // setProjectArray(projectArray.filter(bug => bug._id !== bugId));
+    } 
+
     return(
         <div>
             <CreateTicket currentProj={selectedProj} userArray={bugArray} setUserArray={setBugArray} currentID={userID} />
@@ -46,16 +55,14 @@ function OneProject (props){
                         </div>
                         <p>{x.bugText}</p>
                         <p>Status:<span>{x.bugStatus}</span></p>
-                        {/* <div className="row">
+                        <div className="row">
                             <div className="col">
-                        
-                            <button value={x._id}  type="button" className="bug-comp-btn">Delete</button>
+                                <button onClick={handleDelete} value={x._id}  type="button" className="bug-comp-btn">Delete</button>
                             </div>
-                        <div className="col text-end">
-                            <button value={x._id} className="bug-comp-btn" type="button">Edit</button>
+                            {/* <div className="col text-end">
+                                <button value={x._id} className="bug-comp-btn" type="button">Edit</button>
+                            </div> */}
                         </div>
-                        </div> */}
-
                     </div>
                     )}
                 </div>

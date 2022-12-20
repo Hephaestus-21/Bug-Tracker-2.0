@@ -130,17 +130,21 @@ app.post("/createBug",function(req,res){
 
 
 app.post("/deleteBug", function(req,res){
-    requestedBugID = req.body.bugID;
-    requestedUserID = req.body.currentUserID;
-    console.log(requestedBugID);
-    console.log(requestedUserID);
-    UserModel.findOneAndUpdate({ _id: requestedUserID }, { $pull: { projects: { _id: requestedBugID } }}, function(err, obj) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("New bug successfully deleted.");
+    const requestedBugID = req.body.bugID;
+    const requestedUserID = req.body.currentUserID;
+    const requestedProjID = req.body.currentProjID;
+    UserModel.updateOne(
+        { "_id": requestedUserID, "projects._id": requestedProjID}, 
+        { "$pull": { "projects.$.projectBugs" : { "_id":requestedBugID}  } },
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                res.json(results)
+            }
         }
-    })
+        
+    );
 })
 
 
