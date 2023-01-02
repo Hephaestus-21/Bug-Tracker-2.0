@@ -5,7 +5,7 @@ import react, {useRef, useState, useEffect } from "react";
 
 function EditBugs(props) {
 
-  const [editName, setName] = useState(props.editProjObj.projectName);
+  const [editName, setName] = useState(props.editProjObj.bugName);
   const [editText, setText] = useState(props.editProjObj.bugText);
   const [editStatus, setStatus] = useState("Open");
   const [editPriority, setPriority] = useState("Low");
@@ -68,7 +68,7 @@ function EditBugs(props) {
                 {/*Project Name Input  */}
                 <div className="form-group">
                   <label htmlFor="bootName"><h5>Project Name:</h5></label><br/>
-                  <input type="text" onChange={handleNameChange} ref={ref} defaultValue={props.editProjObj.projectName} name="project-name" className="create-input-css-my" id="bootEmail" />
+                  <input type="text" onChange={handleNameChange} ref={ref} defaultValue={props.editProjObj.bugName} name="project-name" className="create-input-css-my" id="bootEmail" />
                 </div><br/>
                 
               </div>

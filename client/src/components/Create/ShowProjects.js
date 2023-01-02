@@ -85,7 +85,7 @@ function ShowProjects(props) {
           </div>
           )}
       </div>
-      { isHidden ? <div><OneProject changeHidden={setHidden} userID={userID} projectID={projectID} /></div> : <div></div> }
+      { isHidden ? <div><OneProject userID={userID} projectID={projectID} /></div> : <div></div> }
       {/* { isHidden ? <div><EditBugs setUserArray={setBugArray} changeHidden={setHidden} userID={userID} editProjObj={editProjObj} bugID={ticketBugID} /></div> : <div></div> } */}
     </div>
     

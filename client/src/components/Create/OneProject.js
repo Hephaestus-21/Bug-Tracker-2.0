@@ -1,4 +1,5 @@
 import react,{useEffect, useState} from "react";
+import EditBugs from "./EditBugs";
 import CreateTicket from "./CreateTicket";
 import Axios from "axios";
 
@@ -7,6 +8,11 @@ function OneProject (props){
     const [ selectedProj , setProj ] = useState({})
     const [bugArray, setBugArray ] = useState([])
     const [ isWait , setWait ] = useState(false)
+    const [ isHidden , setHidden ] = useState(false)
+
+    // just for edit bugs
+    const [ticketBugID, setID] = useState("");
+    const [editProjObj, setObj] = useState({});
 
     const userID = props.userID
 
@@ -33,13 +39,30 @@ function OneProject (props){
         Axios.post("http://localhost:3001/deleteBug", {bugID: bugId, currentUserID: userID, currentProjID: selectedProj } ).then(function(response){
       
         })
-        // setProjectArray(projectArray.filter(bug => bug._id !== bugId));
+        setBugArray(bugArray.filter(bug => bug._id !== bugId));
     } 
+
+    function handleEdit(event){
+        const bugId = (event.target.value);
+        Axios.post("http://localhost:3001/getUserByID", { userID:userID }).then(function(response){
+            response.data.projects.map(x => {
+                if (x._id === selectedProj._id){
+                    x.projectBugs.map(x => {
+                        if(x._id == bugId){
+                            setID(x._id)
+                            setObj(x)
+                            setHidden(true)
+                    }})
+                }
+            })
+        })
+        
+    }
 
     return(
         <div>
-            <CreateTicket currentProj={selectedProj} userArray={bugArray} setUserArray={setBugArray} currentID={userID} />
-            <div className="ticket-container">
+            <div hidden={isHidden}><CreateTicket currentProj={selectedProj} userArray={bugArray} setUserArray={setBugArray} currentID={userID} /></div>
+            <div hidden={isHidden} className="ticket-container">
                 <div className="row">
                     <div className="col-8"><h2>{selectedProj.projectName}</h2></div>
                     <div className="col-4"><h2>Owner:{selectedProj.projectOwner}</h2></div>
@@ -59,14 +82,15 @@ function OneProject (props){
                             <div className="col">
                                 <button onClick={handleDelete} value={x._id}  type="button" className="bug-comp-btn">Delete</button>
                             </div>
-                            {/* <div className="col text-end">
-                                <button value={x._id} className="bug-comp-btn" type="button">Edit</button>
-                            </div> */}
+                            <div className="col text-end">
+                                <button onClick={handleEdit} value={x._id} className="bug-comp-btn" type="button">Edit</button>
+                            </div>
                         </div>
                     </div>
                     )}
                 </div>
             </div>
+            { isHidden ? <div><EditBugs setUserArray={setBugArray} changeHidden={setHidden} userID={userID} editProjObj={editProjObj} bugID={ticketBugID} /></div> : <div></div> }
         </div>
     )
 }
