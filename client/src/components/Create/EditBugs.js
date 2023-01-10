@@ -5,8 +5,8 @@ import react, {useRef, useState, useEffect } from "react";
 
 function EditBugs(props) {
 
-  const [editName, setName] = useState(props.editProjObj.bugName);
-  const [editText, setText] = useState(props.editProjObj.bugText);
+  const [editName, setName] = useState(props.editTicketObj.bugName);
+  const [editText, setText] = useState(props.editTicketObj.bugText);
   const [editStatus, setStatus] = useState("Open");
   const [editPriority, setPriority] = useState("Low");
   const [isEditWait, setEditWait] = useState(false)
@@ -31,8 +31,9 @@ function EditBugs(props) {
   
   function handleClick(event){
     const userId = props.userID
+    const projectId = props.currentProj._id
     const editNewObject = {nameTick:editName,textTick:editText, statTick:editStatus, priorTick:editPriority}
-    Axios.post("http://localhost:3001/changeBug", {currentUser:userId, editNewObject: editNewObject, bugID: ticketID }).then(function(response){
+    Axios.post("http://localhost:3001/changeBug", {currentUser:userId, projectId:projectId, editNewObject: editNewObject, bugID: ticketID }).then(function(response){
       console.log(response.data);
     })
     setEditWait(true);
@@ -50,6 +51,7 @@ function EditBugs(props) {
       props.setUserArray(projectArray);
     });
     props.changeHidden(false)
+    // used to change back to previous page
   } else{
 
   }
@@ -68,7 +70,7 @@ function EditBugs(props) {
                 {/*Project Name Input  */}
                 <div className="form-group">
                   <label htmlFor="bootName"><h5>Project Name:</h5></label><br/>
-                  <input type="text" onChange={handleNameChange} ref={ref} defaultValue={props.editProjObj.bugName} name="project-name" className="create-input-css-my" id="bootEmail" />
+                  <input type="text" onChange={handleNameChange} ref={ref} defaultValue={props.editTicketObj.bugName} name="project-name" className="create-input-css-my" id="bootEmail" />
                 </div><br/>
                 
               </div>
@@ -91,7 +93,7 @@ function EditBugs(props) {
                 {/* Description TextArea */}
                 <div className="form-group">
                   <label htmlFor="descArea"><h5>Text:</h5></label><br/>
-                  <textarea name="text-desc" onChange={handleTextChange} ref={ref} defaultValue={props.editProjObj.bugText} className="create-input-css-my vert-align-my" id="descArea" cols="32" rows="3"></textarea>
+                  <textarea name="text-desc" onChange={handleTextChange} ref={ref} defaultValue={props.editTicketObj.bugText} className="create-input-css-my vert-align-my" id="descArea" cols="32" rows="3"></textarea>
                 </div><br/>
               </div>
               <div className="col-4">

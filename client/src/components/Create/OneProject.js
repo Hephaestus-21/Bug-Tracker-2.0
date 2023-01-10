@@ -12,7 +12,7 @@ function OneProject (props){
 
     // just for edit bugs
     const [ticketBugID, setID] = useState("");
-    const [editProjObj, setObj] = useState({});
+    const [editTicketObj, setObj] = useState({});
 
     const userID = props.userID
 
@@ -90,7 +90,7 @@ function OneProject (props){
                     )}
                 </div>
             </div>
-            { isHidden ? <div><EditBugs setUserArray={setBugArray} changeHidden={setHidden} userID={userID} editProjObj={editProjObj} bugID={ticketBugID} /></div> : <div></div> }
+            { isHidden ? <div><EditBugs setUserArray={setBugArray} currentProj={selectedProj} changeHidden={setHidden} userID={userID} editTicketObj={editTicketObj} bugID={ticketBugID} /></div> : <div></div> }
         </div>
     )
 }

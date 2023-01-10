@@ -149,26 +149,37 @@ app.post("/deleteBug", function(req,res){
 
 
 
-
-
-// app.get("/editBug",function(req,res){
-//     UserModel.findById(currentIDUser, function(err,results){
-//         results.projects.map(function(x){
-//             if (x._id == specEditBug){
-//                 res.render("index",{Name:x.projectName, Status:x.bugStatus, Description:x.bugText, Priority:x.bugPriority, ID:x._id})
-//             }else {
-//                 console.log("still searching.")
-//             }
-//         })
-//     })
-
-// })
-
 app.post("/changeBug",function(req,res){
-    console.log(req.body.editNewObject.nameTick);
-    UserModel.findOneAndUpdate({_id: req.body.currentUser, 'projects._id': req.body.bugID}, { $set: { "projects.$.projectName": req.body.editNewObject.nameTick, "projects.$.bugStatus" :req.body.editNewObject.statTick, "projects.$.bugText":req.body.editNewObject.textTick , "projects.$.bugPriority": req.body.editNewObject.priorTick }}, function(err, results){
-        console.log(results)
-    })
+    const requestedBugID = req.body.bugID;
+    const requestedUserID = req.body.currentUser;
+    const requestedProjID = req.body.projectId;
+
+    const editedObject = (req.body.editNewObject);
+    
+    UserModel.updateOne(
+        {_id:requestedUserID,"projects._id":requestedProjID},
+        {$set: { 'projects.$[s].projectBugs.$[n].bugName': editedObject.nameTick,'projects.$[s].projectBugs.$[n].bugText': editedObject.textTick ,'projects.$[s].projectBugs.$[n].bugStatus': editedObject.statTick , 'projects.$[s].projectBugs.$[n].bugPriority': editedObject.priorTick} },
+        {arrayFilters: [{'s._id':requestedProjID} ,{'n._id':requestedBugID}],multi:true },
+        (err,result) => {
+            if (err) { console.log(err); }
+            console.log(result)
+   
+    });
+    
+
+    // UserModel.findOneAndUpdate({_id: requestedUserID}, 
+    //     { 
+    //       "$set": {"projects.$[outer].projectBugs.$[inner].bugName": editedObject.nameTick} 
+    //     },
+    //     { 
+    //       "arrayFilters": [{ "outer.id": requestedProjID },{ "inner.id": requestedBugID }]
+    //     },
+    //     function(err, response) {
+    //       console.log(err);
+    //       console.log(response);
+    // })
+
+
 });
 
 app.listen(3001,function(){
