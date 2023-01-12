@@ -23,14 +23,17 @@ function CreateLogin(props) {
     Axios.post("http://localhost:3001/getUserLogin", userObject).then(function (response){
 
       // gets id of the user requested, which will then later be used to get all the bugs for that user
-      console.log(response.data)
-      const tempHoldID = response.data._id;
-      props.giveID(tempHoldID);
+      if (typeof response.data == "object"){
+        const tempHoldID = response.data._id;
+        props.giveID(tempHoldID);
 
-      setFullName([response.data.fname,response.data.lname])
-      setHidden(true);
-      setWelcHidden(false);
-      props.changeLogState(true);
+        setFullName([response.data.fname,response.data.lname])
+        setHidden(true);
+        setWelcHidden(false);
+        props.changeLogState(true);
+      }else{
+        alert("Wrong email or password.")
+      }
     })
   }
   

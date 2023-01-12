@@ -29,7 +29,7 @@ function EditBugs(props) {
     setPriority(event.target.value)
   }
   
-  function handleClick(event){
+  function handleClick(){
     const userId = props.userID
     const projectId = props.currentProj._id
     const editNewObject = {nameTick:editName,textTick:editText, statTick:editStatus, priorTick:editPriority}
@@ -44,13 +44,19 @@ function EditBugs(props) {
 
   if ( isEditWait === true ){
     const currentUser = props.userID
+    const projectId = props.currentProj._id
     setEditWait(false);
     Axios.post("http://localhost:3001/getUserByID", {userID: currentUser } ).then(function(response){
       const projectArray = (response.data.projects);
-      console.log(projectArray)
-      props.setUserArray(projectArray);
+      projectArray.forEach(function(element){
+        if (element._id == projectId){
+          props.setUserArray(element.projectBugs);
+          props.changeHidden(false);
+        }else{
+          return
+        }
+      })
     });
-    props.changeHidden(false)
     // used to change back to previous page
   } else{
 
