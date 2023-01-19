@@ -2,7 +2,7 @@ import react,{useEffect, useState} from "react";
 import Axios from "axios";
 import CreateProject from "./CreateProject";
 import EditBugs from "./EditBugs";
-import OneProject from "./OneProject";
+import ShowTickets from "./ShowTickets";
 
 
 
@@ -85,7 +85,7 @@ function ShowProjects(props) {
           </div>
           )}
       </div>
-      { isHidden ? <div><OneProject userID={userID} projectID={projectID} /></div> : <div></div> }
+      { isHidden ? <div><ShowTickets userID={userID} projectID={projectID} /></div> : <div></div> }
       {/* { isHidden ? <div><EditBugs setUserArray={setBugArray} changeHidden={setHidden} userID={userID} editProjObj={editProjObj} bugID={ticketBugID} /></div> : <div></div> } */}
     </div>
     

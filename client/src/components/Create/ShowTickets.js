@@ -3,7 +3,7 @@ import EditBugs from "./EditBugs";
 import CreateTicket from "./CreateTicket";
 import Axios from "axios";
 
-function OneProject (props){
+function ShowTickets (props){
 
     const [ selectedProj , setProj ] = useState({})
     const [bugArray, setBugArray ] = useState([])
@@ -97,4 +97,4 @@ function OneProject (props){
 
 
 
-export default OneProject;
+export default ShowTickets;
