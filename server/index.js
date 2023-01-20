@@ -25,7 +25,6 @@ mongoose.connect(process.env.MONGOOSEURL, () => {
 
 app.post("/getUserLogin", function (req, res){
     const requestedUser = (req.body);
-    console.log(requestedUser)
     UserModel.findOne({email: requestedUser.email, password: requestedUser.password }, function(err,results){
         if (err){
             console.log(err)
@@ -60,6 +59,21 @@ app.post("/createNewUser", function(req, res){
     // dont need to specify the projects, can be seen as re assigning to an already set variable/const.
     newUser.save();
     res.json("User created.")
+})
+
+app.post("/addUser",function(req,res){
+    const requestedUser = req.body.requestedUser;
+    const projectID = req.body.projectID;
+    console.log(requestedUser,projectID)
+    ProjectModel.findOneAndUpdate({"_id": projectID},
+        {"$push": {"addedUsers": requestedUser}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                res.json(results)
+            }
+    })
 })
 
 app.post("/createProject",function(req,res){

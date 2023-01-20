@@ -55,6 +55,14 @@ function ShowProjects(props) {
   //   })
   //   window.scrollTo(0, document.body.scrollHeight);
   // }
+    function addUsers(event){
+      const currentProjectID = event.target.value
+      const requestedUser = prompt("Enter user's email:");
+      console.log(requestedUser);
+      Axios.post("http://localhost:3001/addUser",{requestedUser:requestedUser,projectID:currentProjectID}).then(function(response){
+        alert("New User has been added.")
+      })
+    }
 
     function handleView(event){
       setID(event.target.value);
@@ -71,10 +79,10 @@ function ShowProjects(props) {
           {projectArray.map((x, index) => 
           <div key={index} className="bugComp">
             <div className="row">
-              <div className="col-9">
+              <div className="col-5">
                 <h5>{x.projectName}</h5>
               </div>
-              <div className={`col-3 text-end`}>
+              <div className={`col-7 text-end`}>
                 <h5>Owner:{x.projectOwner}</h5>
               </div>
             </div>
@@ -84,6 +92,11 @@ function ShowProjects(props) {
               </div>
               <div className="col text-end">
                 <button onClick={handleView} value={x._id} className="bug-comp-btn" type="button">View Project</button>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-end">
+                <button onClick={addUsers} value={x._id} className="bug-comp-btn" type="button">Add Users</button>
               </div>
             </div>
 
