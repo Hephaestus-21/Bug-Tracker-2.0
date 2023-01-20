@@ -13,7 +13,9 @@ function EditBugs(props) {
 
   const ref = useRef(null);
 
-  const ticketID = props.bugID
+  const ticketID = props.ticketID
+  const userID = props.userID
+  const projectID = props.selectedProj._id
 
   function handleNameChange(event){
     setName(event.target.value)
@@ -30,32 +32,29 @@ function EditBugs(props) {
   }
   
   function handleClick(){
-    const userId = props.userID
-    const projectId = props.currentProj._id
     const editNewObject = {nameTick:editName,textTick:editText, statTick:editStatus, priorTick:editPriority}
-    Axios.post("http://localhost:3001/changeBug", {currentUser:userId, projectId:projectId, editNewObject: editNewObject, bugID: ticketID }).then(function(response){
-      console.log(response.data);
+    Axios.post("http://localhost:3001/changeBug", {editNewObject: editNewObject, bugID: ticketID }).then(function(response){
+      setEditWait(true);
     })
-    setEditWait(true);
 
    
   }
 
 
-  if ( isEditWait === true ){
-    const currentUser = props.userID
-    const projectId = props.currentProj._id
+  if ( isEditWait == true ){
     setEditWait(false);
-    Axios.post("http://localhost:3001/getUserByID", {userID: currentUser } ).then(function(response){
-      const projectArray = (response.data.projects);
-      projectArray.forEach(function(element){
-        if (element._id == projectId){
-          props.setUserArray(element.projectBugs);
-          props.changeHidden(false);
-        }else{
-          return
-        }
-      })
+    Axios.post("http://localhost:3001/getSingleProject", {projectID} ).then(function(response){
+      props.setBugArray(response.data.projectBugs);
+      props.changeHidden(false);
+      // const projectArray = (response.data.projects);
+      // projectArray.forEach(function(element){
+      //   if (element._id == projectID){
+      //     props.setUserArray(element.projectBugs);
+      //     props.changeHidden(false);
+      //   }else{
+      //     return
+      //   }
+      // })
     });
     // used to change back to previous page
   } else{
@@ -75,7 +74,7 @@ function EditBugs(props) {
 
                 {/*Project Name Input  */}
                 <div className="form-group">
-                  <label htmlFor="bootName"><h5>Project Name:</h5></label><br/>
+                  <label htmlFor="bootName"><h5>Ticket Name:</h5></label><br/>
                   <input type="text" onChange={handleNameChange} ref={ref} defaultValue={props.editTicketObj.bugName} name="project-name" className="create-input-css-my" id="bootEmail" />
                 </div><br/>
                 

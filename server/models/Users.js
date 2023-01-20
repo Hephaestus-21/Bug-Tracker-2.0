@@ -18,35 +18,7 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-    },
-    projects: [{
-        projectName: {
-            type: String,
-            required: true,
-        },
-        projectOwner: {
-            type: String,
-            required: true,
-        },
-        projectBugs: [{
-            bugName: {
-                type: String,
-                required: true,
-            },
-            bugStatus:{
-                type: String,
-                required: true,
-            },
-            bugText: {
-                type: String,
-                required: true,
-            },
-            bugPriority: {
-                type: String,
-                required: true,
-            }
-        }],
-    }]
+    }
 })
 
 const UserModel = mongoose.model("users",UserSchema);

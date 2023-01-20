@@ -9,19 +9,24 @@ import ShowTickets from "./ShowTickets";
 
 function ShowProjects(props) {
 
-  const userID = props.loggedUserID
+  const user = props.loggedUser
   const [projectArray, setProjectArray ] = useState([])
   const [isHidden, setHidden] = useState(false);
+
 
   const [projectID, setID] = useState("")
   
   // just for edit bugs
-  const [editProjObj, setObj] = useState({});
 
   useEffect(() => {
-    Axios.post("http://localhost:3001/getUserByID", {userID} ).then(function(response){
-      setProjectArray(response.data.projects)
-    })
+    const userEmail = user.email
+    Axios.post("http://localhost:3001/getUserProjects", {userEmail}).then(function(response){
+    setProjectArray(response.data)
+    // const newObjectTicket = (projectArray[projectArray.length - 1]);
+    //   const ArrayUser = props.userArray;
+    //   props.setUserArray([...ArrayUser, newObjectTicket]);
+  })
+
   }, []);
   
 
@@ -60,7 +65,7 @@ function ShowProjects(props) {
 
   return(
     <div>
-      <div hidden={isHidden}><CreateProject userArray={projectArray} setUserArray={setProjectArray} currentID={userID} /></div>
+      <div hidden={isHidden}><CreateProject currentUserEmail={user.email} userArray={projectArray} setUserArray={setProjectArray} currentID={user._id} /></div>
       <div hidden={isHidden} className="ticket-container">
           <h2>Projects</h2><br/>
           {projectArray.map((x, index) => 
@@ -85,7 +90,7 @@ function ShowProjects(props) {
           </div>
           )}
       </div>
-      { isHidden ? <div><ShowTickets userID={userID} projectID={projectID} /></div> : <div></div> }
+      { isHidden ? <div><ShowTickets user={user} projectID={projectID} /></div> : <div></div> }
       {/* { isHidden ? <div><EditBugs setUserArray={setBugArray} changeHidden={setHidden} userID={userID} editProjObj={editProjObj} bugID={ticketBugID} /></div> : <div></div> } */}
     </div>
     

@@ -7,15 +7,15 @@ function TicketLayout() {
 
   const [loggedIn, setLoginState] = useState(false);
   const [isHide, setHide] = useState(true);
-  const [currentUserID, setCurrentUser] = useState("");
+  const [currentUser, setCurrentUser] = useState("");
 
 
 
   return(
     <div className="">
       <div hidden={!isHide}><CreateRegistor setHide={setHide} /></div>
-      <div hidden={isHide}><CreateLogin setHide={setHide} giveID={setCurrentUser} changeLogState={setLoginState} /></div>
-      { loggedIn ? <div><ShowProjects loggedUserID={currentUserID} /></div> : 'please log in to access features' }
+      <div hidden={isHide}><CreateLogin setHide={setHide} giveUser={setCurrentUser} changeLogState={setLoginState} /></div>
+      { loggedIn ? <div><ShowProjects loggedUser={currentUser} /></div> : 'please log in to access features' }
     </div>
   )
 }

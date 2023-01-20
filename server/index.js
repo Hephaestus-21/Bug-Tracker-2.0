@@ -10,6 +10,7 @@ const app = express()
 app.use(express.json())
 const cors = require("cors");
 const UserModel = require("./models/Users");
+const ProjectModel = require("./models/Projects")
 app.use(express.urlencoded( {extended: true} ));
 app.use(express.static(__dirname+'/public'));
 app.set('view engine', 'ejs');
@@ -29,7 +30,6 @@ app.post("/getUserLogin", function (req, res){
         if (err){
             console.log(err)
         }else{
-            console.log(results)
             res.send(results);
         }
     })
@@ -64,121 +64,90 @@ app.post("/createNewUser", function(req, res){
 
 app.post("/createProject",function(req,res){
     const projectObject = (req.body);
-    const newProject = {projectName:projectObject.name, projectOwner:projectObject.owner, projectBugs:[] }
-    console.log(newProject);
 
-    
-
-    UserModel.findOneAndUpdate(
-        { _id: projectObject.userIDBase }, 
-        { $push: { projects: newProject  } },
-        function (error, results) {
-            if (error) {
-                console.log(error);
-            } else {
-                res.json(results);
-            }
+    const newProject = new ProjectModel({
+        projectName:projectObject.name,
+        projectOwner:projectObject.owner,
+        addedUsers: [projectObject.owner]
     });
+    newProject.save();
+    res.json("User created.")
 
-    // Work on adding create bug ting ye
 
+})
+
+app.post("/getUserProjects", function(req,res){
+    const email = (req.body.userEmail)
+    console.log(email)
+    ProjectModel.find({addedUsers: email },function(err, results){
+        res.json(results)
+        console.log(results)
+    })
+    console.log("yay")
+})
+
+app.post("/getSingleProject",function(req,res){
+    const projectID = (req.body.projectID)
+    ProjectModel.findById(projectID,function(err, results){
+        res.json(results)
+        console.log(results)
+    })
 })
 
 app.post("/createBug",function(req,res){
     const bugObject = (req.body);
     const projectID = bugObject.currentProjID._id
-    const newTicket = {bugName:bugObject.Name, bugStatus:bugObject.Status, bugText:bugObject.Text, bugPriority:bugObject.Priority}
+    const newTicket = {"bugName":bugObject.Name, "bugStatus":bugObject.Status, "bugText":bugObject.Text, "bugPriority":bugObject.Priority}
 
-    // let projIndex = 0
-
-    // UserModel.findById(bugObject.userIDBase, function(err,results){
-    //     results.projects.map(function(x,index){
-    //         // console.log(x._id)
-    //         // console.log(index)
-    //         if (x._id == projectID){
-    //             projIndex = index;
-    //             console.log(projIndex);
-    //         }else{
-
-    //         }
-    //     });
-    // })
-    console.log(bugObject)
-    console.log(projectID)
-    console.log(bugObject.userIDBase)
-
-    UserModel.updateOne(
-        { "_id": bugObject.userIDBase, "projects._id": projectID}, 
-        { "$push": { "projects.$.projectBugs" : {"bugName":bugObject.Name, "bugStatus":bugObject.Status, "bugText":bugObject.Text, "bugPriority":bugObject.Priority}  } },
+    ProjectModel.findOneAndUpdate({"_id": projectID},
+        {"$push": {"projectBugs": newTicket}},
         function(err,results){
             if (err){
                 console.log(err)
             }else{
                 res.json(results)
             }
-        }
-        
-    );
-
-    // UserModel.findOneAndUpdate(
-    // { "_id": bugObject.userIDBase}, 
-    // { "$push": { "projects.$[i].projectBugs" : newTicket  } },
-    // { arrayFilters: [{'i._id': projIndex,},],}
+    })
     
-    // );
-    
-})
+});
 
 
 app.post("/deleteBug", function(req,res){
     const requestedBugID = req.body.bugID;
-    const requestedUserID = req.body.currentUserID;
-    const requestedProjID = req.body.currentProjID;
-    UserModel.updateOne(
-        { "_id": requestedUserID, "projects._id": requestedProjID}, 
-        { "$pull": { "projects.$.projectBugs" : { "_id":requestedBugID}  } },
+    const requestedProjID = req.body.projectID;
+
+    ProjectModel.updateOne({_id:requestedProjID}, 
+        {"$pull":{ "projectBugs":{"_id":requestedBugID}}},
         function(err,results){
             if (err){
                 console.log(err)
             }else{
                 res.json(results)
             }
-        }
-        
-    );
+        })
+
 })
 
 
 
 app.post("/changeBug",function(req,res){
-    const requestedBugID = req.body.bugID;
-    const requestedUserID = req.body.currentUser;
-    const requestedProjID = req.body.projectId;
+    const bugID = req.body.bugID;
 
-    const editedObject = (req.body.editNewObject);
-    
-    UserModel.updateOne(
-        {_id:requestedUserID,"projects._id":requestedProjID},
-        {$set: { 'projects.$[s].projectBugs.$[n].bugName': editedObject.nameTick,'projects.$[s].projectBugs.$[n].bugText': editedObject.textTick ,'projects.$[s].projectBugs.$[n].bugStatus': editedObject.statTick , 'projects.$[s].projectBugs.$[n].bugPriority': editedObject.priorTick} },
-        {arrayFilters: [{'s._id':requestedProjID} ,{'n._id':requestedBugID}],multi:true },
-        (err,result) => {
-            if (err) { console.log(err); }
-            console.log(result)
-   
-    });
-    
+    const editedBug = (req.body.editNewObject);
 
-    // UserModel.findOneAndUpdate({_id: requestedUserID}, 
-    //     { 
-    //       "$set": {"projects.$[outer].projectBugs.$[inner].bugName": editedObject.nameTick} 
-    //     },
-    //     { 
-    //       "arrayFilters": [{ "outer.id": requestedProjID },{ "inner.id": requestedBugID }]
-    //     },
-    //     function(err, response) {
-    //       console.log(err);
-    //       console.log(response);
-    // })
+    ProjectModel.updateOne({"projectBugs._id" : bugID},{"$set" : {
+        "projectBugs.$.bugName": editedBug.nameTick,
+        "projectBugs.$.bugStatus": editedBug.statTick,
+        "projectBugs.$.bugText": editedBug.textTick,
+        "projectBugs.$.bugPriority": editedBug.priorTick
+     }},function(err,results){
+        if (err){
+            console.log(err);
+        }else{
+            res.json(results);
+        }
+     })
+       
 
 
 });

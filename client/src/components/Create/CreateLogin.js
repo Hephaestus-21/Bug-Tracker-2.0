@@ -24,8 +24,8 @@ function CreateLogin(props) {
 
       // gets id of the user requested, which will then later be used to get all the bugs for that user
       if (typeof response.data == "object"){
-        const tempHoldID = response.data._id;
-        props.giveID(tempHoldID);
+        const tempHoldID = response.data;
+        props.giveUser(tempHoldID);
 
         setFullName([response.data.fname,response.data.lname])
         setHidden(true);

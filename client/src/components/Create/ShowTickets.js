@@ -11,57 +11,61 @@ function ShowTickets (props){
     const [ isHidden , setHidden ] = useState(false)
 
     // just for edit bugs
-    const [ticketBugID, setID] = useState("");
-    const [editTicketObj, setObj] = useState({});
+    const [ticketID, setTicketID] = useState("");
+    const [editTicketObj, setTicketObj] = useState({});
 
-    const userID = props.userID
+    const userID = props.user._id
+    const userEmail = props.user.email;
+    const projectID = props.projectID
+    
 
     
     if (isWait === false){
-        Axios.post("http://localhost:3001/getUserByID", {userID:userID}).then(function(response){
-            response.data.projects.map(function(x, index){
-                if (props.projectID === x._id){
-                    setProj(x)
-                    setBugArray(x.projectBugs)
-                    setWait(true);
-                }else{
-                    console.log("Not found")
-                }
-            })
+        setWait(true);
+        Axios.post("http://localhost:3001/getSingleProject", {projectID}).then(function(response){  
+            setProj(response.data)
+            setBugArray(response.data.projectBugs)
+            console.log(response.data)
         })
     }else{
 
     }
 
     function handleDelete(event){
-        const bugId = event.target.value;
-        console.log(bugId)
-        Axios.post("http://localhost:3001/deleteBug", {bugID: bugId, currentUserID: userID, currentProjID: selectedProj } ).then(function(response){
+        const bugID = event.target.value;
+        Axios.post("http://localhost:3001/deleteBug", {bugID: bugID, projectID: projectID } ).then(function(response){
       
         })
-        setBugArray(bugArray.filter(bug => bug._id !== bugId));
+        setBugArray(bugArray.filter(bug => bug._id !== bugID));
     } 
 
     function handleEdit(event){
-        const bugId = (event.target.value);
-        Axios.post("http://localhost:3001/getUserByID", { userID:userID }).then(function(response){
-            response.data.projects.map(x => {
-                if (x._id === selectedProj._id){
-                    x.projectBugs.map(x => {
-                        if(x._id == bugId){
-                            setID(x._id)
-                            setObj(x)
-                            setHidden(true)
-                    }})
+        const bugID = (event.target.value);
+        setTicketID(bugID)
+        Axios.post("http://localhost:3001/getSingleProject", { projectID }).then(function(response){
+            response.data.projectBugs.forEach(x => {
+                if (x._id == bugID){
+                    setTicketObj(x);
+                    setHidden(true)
                 }
-            })
+            });
+            // response.data.projects.map(x => {
+            //     if (x._id === selectedProj._id){
+            //         x.projectBugs.map(x => {
+            //             if(x._id == bugId){
+            //                 setID(x._id)
+            //                 setObj(x)
+            //                 setHidden(true)
+            //         }})
+            //     }
+            // })
         })
         
     }
 
     return(
         <div>
-            <div hidden={isHidden}><CreateTicket currentProj={selectedProj} userArray={bugArray} setUserArray={setBugArray} currentID={userID} /></div>
+            <div hidden={isHidden}><CreateTicket currentProj={selectedProj} userArray={bugArray} setUserArray={setBugArray} userEmail={userEmail} /></div>
             <div hidden={isHidden} className="ticket-container">
                 <div className="row">
                     <div className="col-8"><h2>{selectedProj.projectName}</h2></div>
@@ -90,7 +94,7 @@ function ShowTickets (props){
                     )}
                 </div>
             </div>
-            { isHidden ? <div><EditBugs setUserArray={setBugArray} currentProj={selectedProj} changeHidden={setHidden} userID={userID} editTicketObj={editTicketObj} bugID={ticketBugID} /></div> : <div></div> }
+            { isHidden ? <div><EditBugs setBugArray={setBugArray} selectedProj={selectedProj} changeHidden={setHidden} userID={userID} editTicketObj={editTicketObj} ticketID={ticketID} /></div> : <div></div> }
         </div>
     )
 }
