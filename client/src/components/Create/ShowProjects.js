@@ -29,46 +29,36 @@ function ShowProjects(props) {
 
   }, []);
   
-
-
-  // function handleDelete(event){
-  //   const bugId = event.target.value;
-  //   Axios.post("http://localhost:3001/deleteBug", {bugID: bugId, currentUserID: userID} ).then(function(response){
-  
-  //   })
-  //   setProjectArray(projectArray.filter(bug => bug._id !== bugId));
-  // }
-
-  // function handleEdit(event){
-  //   setID(event.target.value);
-  //   Axios.post("http://localhost:3001/getUserByID", { userID:userID }).then(function(response){
-  //     response.data.projects.map(function(x, index){
-  //       if (x._id === event.target.value){
-  //         setObj(response.data.projects[index]);
-  //         setHidden(true);
-  //       }else {
-  //         console.log("Still looking for bug")
-
-  //       }
-
-  //     });
-  //   })
-  //   window.scrollTo(0, document.body.scrollHeight);
-  // }
-    function addUsers(event){
-      const currentProjectID = event.target.value
-      const requestedUser = prompt("Enter user's email:");
-      console.log(requestedUser);
-      Axios.post("http://localhost:3001/addUser",{requestedUser:requestedUser,projectID:currentProjectID}).then(function(response){
-        alert("New User has been added.")
+  function handleDelete(event){
+    const projectID = event.target.value;
+    const confirmation = prompt("Type 'Delete' to confirm this action:");
+    if (confirmation === null){
+      return;
+    }else if (confirmation === "Delete") {
+      Axios.post("http://localhost:3001/deleteProject", {projectID}).then(function(response){
+        console.log("Project Deleted")
       })
+      setProjectArray(projectArray.filter(project => project._id !== projectID));
+    }else{
+      alert("Something went wrong");
     }
+  }
+  
 
-    function handleView(event){
-      setID(event.target.value);
-      setHidden(true);
+  function addUsers(event){
+    const currentProjectID = event.target.value
+    const requestedUser = prompt("Enter user's email:");
+    console.log(requestedUser);
+    Axios.post("http://localhost:3001/addUser",{requestedUser:requestedUser,projectID:currentProjectID}).then(function(response){
+      alert("New User has been added.")
+    })
+  }
 
-    }
+  function handleView(event){
+    setID(event.target.value);
+    setHidden(true);
+
+  }
 
 
   return(
@@ -88,7 +78,7 @@ function ShowProjects(props) {
             </div>
             <div className="row">
               <div className="col">
-              <button value={x._id}  type="button" className="bug-comp-btn">Delete</button>
+              <button hidden={!(x.projectOwner == user.email)} value={x._id} onClick={handleDelete}  type="button" className="bug-comp-btn">Delete</button>
               </div>
               <div className="col text-end">
                 <button onClick={handleView} value={x._id} className="bug-comp-btn" type="button">View Project</button>

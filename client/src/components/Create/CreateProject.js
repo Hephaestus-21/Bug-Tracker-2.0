@@ -8,7 +8,7 @@ function CreateProject(props) {
   // for database to create ticket
 
   const userEmail = props.currentUserEmail
-  const currentUserID = props.currentID; 
+  // const currentUserID = props.currentID; 
 
   
   function nameChange(event){
@@ -19,7 +19,7 @@ function CreateProject(props) {
 
   function handleClick(){
 
-    Axios.post("http://localhost:3001/createProject", {name:projectName, owner:userEmail, userIDBase:currentUserID}).then(function (res) {
+    Axios.post("http://localhost:3001/createProject", {name:projectName, owner:userEmail}).then(function (res) {
       console.log("Bug created in the backend.")
       console.log(res.data);
       setWait(true);
@@ -31,10 +31,11 @@ function CreateProject(props) {
   if (isWait === true){
     setWait(false)
     Axios.post("http://localhost:3001/getUserProjects", {userEmail} ).then(function(response){
-      const projectArray = (response.data);
-      const newObjectTicket = (projectArray[projectArray.length - 1]);
-      const ArrayUser = props.userArray;
-      props.setUserArray([...ArrayUser, newObjectTicket]);
+      props.setUserArray(response.data);
+      // const projectArray = (response.data);
+      // const newObjectTicket = (projectArray[projectArray.length - 1]);
+      // const ArrayUser = props.userArray;
+      // props.setUserArray([...ArrayUser, newObjectTicket]);
       
     });
   }

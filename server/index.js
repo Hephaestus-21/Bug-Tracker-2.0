@@ -90,6 +90,17 @@ app.post("/createProject",function(req,res){
 
 })
 
+app.post("/deleteProject",function(req,res){
+    const projectID = req.body.projectID;
+    ProjectModel.findOneAndDelete({"_id":projectID},function(err,results){
+        if (err){
+            console.log(err);
+        }else{
+            return;
+        }
+    })
+})
+
 app.post("/getUserProjects", function(req,res){
     const email = (req.body.userEmail)
     console.log(email)
