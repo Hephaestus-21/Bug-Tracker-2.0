@@ -76,6 +76,21 @@ app.post("/addUser",function(req,res){
     })
 })
 
+app.post("/deleteUser",function(req,res){
+    const requestedUser = req.body.requestedUser;
+    const projectID = req.body.projectID;
+    ProjectModel.findOneAndUpdate({"_id": projectID},
+        {"$pull": {"addedUsers": requestedUser}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                res.json(results)
+            }
+    })
+
+})
+
 app.post("/createProject",function(req,res){
     const projectObject = (req.body);
 

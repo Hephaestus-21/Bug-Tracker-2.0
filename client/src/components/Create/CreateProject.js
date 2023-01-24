@@ -4,11 +4,10 @@ import Axios from 'axios';
 function CreateProject(props) {
   const [projectName, setProjectName] = useState("");
 
-  const [isWait, setWait] = useState(false);
+  const [isWait, setWait] = useState("false");
   // for database to create ticket
 
   const userEmail = props.currentUserEmail
-  // const currentUserID = props.currentID; 
 
   
   function nameChange(event){
@@ -22,37 +21,24 @@ function CreateProject(props) {
     Axios.post("http://localhost:3001/createProject", {name:projectName, owner:userEmail}).then(function (res) {
       console.log("Bug created in the backend.")
       console.log(res.data);
-      setWait(true);
+      setWait("true");
 
       
     });
   }
 
-  if (isWait === true){
+
+  if (isWait == "true"){
     setWait(false)
     Axios.post("http://localhost:3001/getUserProjects", {userEmail} ).then(function(response){
       props.setUserArray(response.data);
-      // const projectArray = (response.data);
-      // const newObjectTicket = (projectArray[projectArray.length - 1]);
-      // const ArrayUser = props.userArray;
-      // props.setUserArray([...ArrayUser, newObjectTicket]);
       
     });
+  }else{
+
   }
 
-  // if ( isWait === true ){
-  //   setWait(false);
-  //   Axios.post("http://localhost:3001/getUserByID", {userID: currentUserID} ).then(function(response){
-  //     const projectArray = (response.data.projects);
-  //     console.log(projectArray)
-  //     console.log(projectArray.length)
-  //     const newObjectTicket = (projectArray[projectArray.length - 1]);
-  //     const ArrayUser = props.userArray;
-  //     props.setUserArray([...ArrayUser, newObjectTicket]);
-  //   });
-  // } else{
 
-  // }
 
   return(
     <div className="ticket-container">

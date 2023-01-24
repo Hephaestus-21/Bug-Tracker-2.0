@@ -25,7 +25,6 @@ function ShowTickets (props){
         Axios.post("http://localhost:3001/getSingleProject", {projectID}).then(function(response){  
             setProj(response.data)
             setBugArray(response.data.projectBugs)
-            console.log(response.data)
         })
     }else{
 
@@ -49,16 +48,6 @@ function ShowTickets (props){
                     setHidden(true)
                 }
             });
-            // response.data.projects.map(x => {
-            //     if (x._id === selectedProj._id){
-            //         x.projectBugs.map(x => {
-            //             if(x._id == bugId){
-            //                 setID(x._id)
-            //                 setObj(x)
-            //                 setHidden(true)
-            //         }})
-            //     }
-            // })
         })
         
     }

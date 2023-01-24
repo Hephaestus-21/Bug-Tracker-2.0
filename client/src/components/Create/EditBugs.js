@@ -1,5 +1,5 @@
 import Axios from "axios";
-import react, {useRef, useState, useEffect } from "react";
+import react, {useRef, useState } from "react";
 
 
 
@@ -14,7 +14,6 @@ function EditBugs(props) {
   const ref = useRef(null);
 
   const ticketID = props.ticketID
-  const userID = props.userID
   const projectID = props.selectedProj._id
 
   function handleNameChange(event){
@@ -46,15 +45,6 @@ function EditBugs(props) {
     Axios.post("http://localhost:3001/getSingleProject", {projectID} ).then(function(response){
       props.setBugArray(response.data.projectBugs);
       props.changeHidden(false);
-      // const projectArray = (response.data.projects);
-      // projectArray.forEach(function(element){
-      //   if (element._id == projectID){
-      //     props.setUserArray(element.projectBugs);
-      //     props.changeHidden(false);
-      //   }else{
-      //     return
-      //   }
-      // })
     });
     // used to change back to previous page
   } else{

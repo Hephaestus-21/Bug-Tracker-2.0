@@ -13,7 +13,7 @@ function TicketLayout() {
 
   return(
     <div className="">
-      <div hidden={!isHide}><CreateRegistor setHide={setHide} /></div>
+      <div hidden={!isHide}><CreateRegistor setHide={setHide} giveUser={setCurrentUser} changeLogState={setLoginState} /></div>
       <div hidden={isHide}><CreateLogin setHide={setHide} giveUser={setCurrentUser} changeLogState={setLoginState} /></div>
       { loggedIn ? <div><ShowProjects loggedUser={currentUser} /></div> : 'please log in to access features' }
     </div>

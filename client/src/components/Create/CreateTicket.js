@@ -11,7 +11,6 @@ function CreateTicket(props) {
   // for database to create ticket
 
 
-  const userEmail = props.userEmail; 
   const projectID = props.currentProj
 
   
@@ -32,8 +31,7 @@ function CreateTicket(props) {
 
   function handleClick(){
 
-    Axios.post("http://localhost:3001/createBug", {Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority, currentProjID:projectID}).then(function (res) {
-      console.log(res.data);  
+    Axios.post("http://localhost:3001/createBug", {Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority, currentProjID:projectID}).then(function (res) { 
       setWait(true)
     });
   }
