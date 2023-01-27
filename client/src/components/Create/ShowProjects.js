@@ -42,8 +42,9 @@ function ShowProjects(props) {
   
 
   function addUsers(event){
-    const currentProjectID = event.target.value
+    const currentProjectID = event.target.value;
     const requestedUser = prompt("Enter user's email:");
+    if (requestedUser == null){return}
     Axios.post("http://localhost:3001/addUser",{requestedUser:requestedUser,projectID:currentProjectID}).then(function(response){
       alert("New User has been added.")
     })
@@ -52,6 +53,7 @@ function ShowProjects(props) {
   function removeUser(event){
     const currentProjectID = event.target.value;
     const requestedUser = prompt("Enter user's email:");
+    if (requestedUser == null){return}
     Axios.post("http://localhost:3001/deleteUser",{requestedUser:requestedUser,projectID:currentProjectID}).then(function(response){
       alert("User has been removed.")
     })
@@ -99,7 +101,7 @@ function ShowProjects(props) {
           </div>
           )}
       </div>
-      { isHidden ? <div><ShowTickets user={user} projectID={projectID} /></div> : <div></div> }
+      { isHidden ? <div><ShowTickets user={user} setHidden={setHidden} projectID={projectID} /></div> : <div></div> }
     </div>
     
   )

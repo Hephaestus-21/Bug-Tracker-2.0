@@ -51,12 +51,16 @@ function ShowTickets (props){
         })
         
     }
+    function handleReturn(){
+        props.setHidden(false)
+    }
 
     return(
         <div>
             <div hidden={isHidden}><CreateTicket currentProj={selectedProj} userArray={bugArray} setUserArray={setBugArray} userEmail={userEmail} /></div>
             <div hidden={isHidden} className="ticket-container">
                 <div className="row">
+                    <div hidden={isHidden}><button onClick={handleReturn} className="return-btn">Return to Projects</button></div>
                     <div className="col-8"><h2>{selectedProj.projectName}</h2></div>
                     <div className="col-4"><h2>Owner:{selectedProj.projectOwner}</h2></div>
                     {bugArray.map((x, index) => 
@@ -81,6 +85,7 @@ function ShowTickets (props){
                         </div>
                     </div>
                     )}
+                    
                 </div>
             </div>
             { isHidden ? <div><EditBugs setBugArray={setBugArray} selectedProj={selectedProj} changeHidden={setHidden} userID={userID} editTicketObj={editTicketObj} ticketID={ticketID} /></div> : <div></div> }

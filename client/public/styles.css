@@ -94,6 +94,12 @@ div.text-end h5{
     background-color: #0dcaf0;
     border: 3px solid black;
 }
+.return-btn{
+    background-color: #0dcaf0;
+    border: 3px solid black;
+    font-size: 1.25em;
+    margin-bottom: 20px ;
+}
 
 
 
@@ -121,25 +127,5 @@ h1 {
 .form-control{
     background-color: black;
 }
-
-
-
-/* 
-
-Bootstrap
-.form-group{
-    padding-bottom: 20px;
-}
-
-
-
-Scrollable columun 
-.right{
-    height: 100%;
-    overflow-y: scroll;
-}
-.row-height{
-    height: 100vh;
-} */
 
 

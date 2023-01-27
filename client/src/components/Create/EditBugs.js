@@ -7,11 +7,13 @@ function EditBugs(props) {
 
   const [editName, setName] = useState(props.editTicketObj.bugName);
   const [editText, setText] = useState(props.editTicketObj.bugText);
-  const [editStatus, setStatus] = useState("Open");
-  const [editPriority, setPriority] = useState("Low");
+  const [editStatus, setStatus] = useState(props.editTicketObj.bugStatus);
+  const [editPriority, setPriority] = useState(props.editTicketObj.bugPriority);
   const [isEditWait, setEditWait] = useState(false)
 
   const ref = useRef(null);
+
+  console.log(typeof props.editTicketObj.bugStatus)
 
   const ticketID = props.ticketID
   const projectID = props.selectedProj._id
@@ -39,6 +41,10 @@ function EditBugs(props) {
    
   }
 
+  function handleReturn(){
+    props.changeHidden(false);
+  }
+
 
   if ( isEditWait == true ){
     setEditWait(false);
@@ -48,7 +54,7 @@ function EditBugs(props) {
     });
     // used to change back to previous page
   } else{
-
+    
   }
   
 
@@ -74,6 +80,7 @@ function EditBugs(props) {
                   <div className="form-group">
                     <label htmlFor="statusDrop"><h5>Status:</h5></label><br/>
                     <select onChange={handleStatusChange} name="status-select"  className="create-input-css-my" id="statusDrop">
+                      <option value="none" selected disabled hidden>{props.editTicketObj.bugStatus}</option>
                       <option>Open</option>
                       <option>Ongoing</option>
                       <option>Delayed</option>
@@ -96,6 +103,7 @@ function EditBugs(props) {
                 <div className="form-group">
                   <label htmlFor="priorityDrop"><h5>Priority:</h5></label><br/>
                   <select onChange={handlePriorityChange} name="priority-selec"  className="create-input-css-my" id="priorityDrop">
+                    <option value="none" selected disabled hidden>{props.editTicketObj.bugPriority}</option>
                     <option>Low</option>
                     <option>Normal</option>
                     <option>High</option>
@@ -104,7 +112,10 @@ function EditBugs(props) {
               </div>
 
             </div>
-            <div className="row"><div className="col"><button onClick={handleClick} type="button" className="my-btn">Edit bug</button></div></div>
+            <div className="row">
+              <div className="col"><button onClick={handleClick} type="button" className="my-btn">Edit bug</button></div>
+              <div className="col"><button onClick={handleReturn} type="button" className="my-btn">Cancel</button></div>
+            </div>
           </div>
         </form>
 
