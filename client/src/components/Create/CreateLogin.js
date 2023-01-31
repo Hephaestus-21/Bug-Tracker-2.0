@@ -69,10 +69,6 @@ function CreateLogin(props) {
           </div>
         </form>
       </div>
-      {/* if logged in show user's name */}
-      <div hidden={isWelcHidden} className="ticket-container">
-        <h1>Welcome, {userFullName[0]} {userFullName[1]} !</h1>
-      </div>
     </div>
   )
 }

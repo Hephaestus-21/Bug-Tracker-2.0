@@ -5,6 +5,10 @@ body{
 span{
     color:white;
 }
+h1 {
+    /* margin: 0 auto; */
+    font-size: 3.5em;
+ }
 
 
 /* CreateTicket */
@@ -104,22 +108,21 @@ div.text-end h5{
 
 
 /* Navbar */
-.navbar{
+.my-navbar{
     background-color:#f6f5ff;
-    text-align: center;
     color: black;
-    padding-top: 5%;
-    padding-bottom: 5%;
-    margin: 5% 15% 6% 15% ;
+    margin: 0 0 6% 0 ;
     border: 10px inset;
+    margin: 5% 15% 5% 15%;
     border-color: #333333 #a3a3a8 #dadae0;
     box-shadow: 15px 15px 3px #525252 ;
 }
+div.my-navbar .row{
+    margin: 0;
+    padding: 20px 20px 15px 20px;
 
-h1 {
-   margin: 0 auto;
-   font-size: 3.5em;
 }
+
 
 
 
