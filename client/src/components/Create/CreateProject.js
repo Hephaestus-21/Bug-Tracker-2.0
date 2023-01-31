@@ -3,55 +3,42 @@ import Axios from 'axios';
 
 function CreateProject(props) {
   const [projectName, setProjectName] = useState("");
-  const [projectOwner, setProjectOwner] = useState("");
 
-  const [isWait, setWait] = useState(false);
+  const [isWait, setWait] = useState("false");
   // for database to create ticket
 
-
-  const currentUserID = props.currentID; 
+  const userEmail = props.currentUserEmail
 
   
   function nameChange(event){
     setProjectName(event.target.value)
   }
-  
-  function ownerChange(event){
-    setProjectOwner(event.target.value)
-  }
+ 
   
 
   function handleClick(){
 
-    Axios.post("http://localhost:3001/createProject", {name:projectName, owner:projectOwner, userIDBase:currentUserID}).then(function (res) {
+    Axios.post("http://localhost:3001/createProject", {name:projectName, owner:userEmail}).then(function (res) {
       console.log("Bug created in the backend.")
       console.log(res.data);
-      setWait(true);
-      // Axios.post("http://localhost:3001/getUserTickets", {userID: currentUserID} ).then(function(response){
-      //   const projectArray = (response.data.projects);
-      //   console.log(projectArray)
-      //   console.log(projectArray.length)
-      //   const newObjectTicket = (projectArray[projectArray.length - 1]);
-      //   const ArrayUser = props.userArray;
-      //   props.setUserArray([...ArrayUser, newObjectTicket]);
-      // });
+      setWait("true");
+
       
     });
   }
 
-  // if ( isWait === true ){
-  //   setWait(false);
-  //   Axios.post("http://localhost:3001/getUserByID", {userID: currentUserID} ).then(function(response){
-  //     const projectArray = (response.data.projects);
-  //     console.log(projectArray)
-  //     console.log(projectArray.length)
-  //     const newObjectTicket = (projectArray[projectArray.length - 1]);
-  //     const ArrayUser = props.userArray;
-  //     props.setUserArray([...ArrayUser, newObjectTicket]);
-  //   });
-  // } else{
 
-  // }
+  if (isWait == "true"){
+    setWait(false)
+    Axios.post("http://localhost:3001/getUserProjects", {userEmail} ).then(function(response){
+      props.setUserArray(response.data);
+      
+    });
+  }else{
+
+  }
+
+
 
   return(
     <div className="ticket-container">
@@ -74,7 +61,7 @@ function CreateProject(props) {
                 {/* Project Owner Input */}
                 <div className="form-group">
                   <label htmlFor="bootOwner"><h5>Project Owner:</h5></label><br/>
-                  <input onChange={ownerChange} type="text" className="create-input-css-my" id="bootOwner" />
+                  <h4 id="bootOwner" >{props.currentUserEmail}</h4>
                 </div><br/>
               </div>
             </div>

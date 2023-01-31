@@ -23,13 +23,17 @@ function CreateLogin(props) {
     Axios.post("http://localhost:3001/getUserLogin", userObject).then(function (response){
 
       // gets id of the user requested, which will then later be used to get all the bugs for that user
-      const tempHoldID = response.data._id;
-      props.giveID(tempHoldID);
+      if (typeof response.data == "object"){
+        const tempHoldID = response.data;
+        props.giveUser(tempHoldID);
 
-      setFullName([response.data.fname,response.data.lname])
-      setHidden(true);
-      setWelcHidden(false);
-      props.changeLogState(true);
+        setFullName([response.data.fname,response.data.lname])
+        setHidden(true);
+        setWelcHidden(false);
+        props.changeLogState(true);
+      }else{
+        alert("Wrong email or password.")
+      }
     })
   }
   
@@ -64,10 +68,6 @@ function CreateLogin(props) {
               <div className="col"><button onClick={handleAccount} type="button" className="my-btn">Create an Account?</button></div>
           </div>
         </form>
-      </div>
-      {/* if logged in show user's name */}
-      <div hidden={isWelcHidden} className="ticket-container">
-        <h1>Welcome, {userFullName[0]} {userFullName[1]} !</h1>
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import react,{useEffect, useState} from "react";
+import react,{useState} from "react";
 import Axios from "axios";
 
 function CreateRegistor(props){
@@ -12,6 +12,7 @@ function CreateRegistor(props){
         const newUserDoc = {fname:newFName,lname:newLName,email:newEmail,password:newPassword}
         Axios.post("http://localhost:3001/createNewUser", {newUserDoc}).then(function(response){
             console.log(response);
+            props.setHide(false)
         })
     }
     

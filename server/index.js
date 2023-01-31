@@ -1,34 +1,35 @@
+require("dotenv").config()
 const express = require("express")
 const mongoose = require("mongoose")
 const BugModel = require("./models/Bugs");
 let ejs = require('ejs');
 
-require("dotenv").config()
+
 
 const app = express()
 app.use(express.json())
 const cors = require("cors");
 const UserModel = require("./models/Users");
+const ProjectModel = require("./models/Projects")
 app.use(express.urlencoded( {extended: true} ));
 app.use(express.static(__dirname+'/public'));
 app.set('view engine', 'ejs');
 
 app.use(cors());
 
-mongoose.connect(process.env.MONGOOSEURL)
-
-
-let specEditBug = ""
-let currentIDUser = ""
+// mongoose.connect(process.env.MONGOOSEURL)
+mongoose.set("strictQuery", false);
+mongoose.connect(process.env.MONGOOSEURL, () => {
+  console.log("Connected to MongoDB");
+});
 
 app.post("/getUserLogin", function (req, res){
     const requestedUser = (req.body);
-    console.log(requestedUser)
     UserModel.findOne({email: requestedUser.email, password: requestedUser.password }, function(err,results){
         if (err){
-            console.log("Incorrect email or password")
+            console.log(err)
         }else{
-            res.json(results);
+            res.send(results);
         }
     })
 })
@@ -60,110 +61,135 @@ app.post("/createNewUser", function(req, res){
     res.json("User created.")
 })
 
-app.post("/createProject",function(req,res){
-    const projectObject = (req.body);
-    const newProject = {projectName:projectObject.name, projectOwner:projectObject.owner, projectBugs:[] }
-    console.log(newProject);
-
-    
-
-    UserModel.findOneAndUpdate(
-        { _id: projectObject.userIDBase }, 
-        { $push: { projects: newProject  } },
-        function (error, results) {
-            if (error) {
-                console.log(error);
-            } else {
-                res.json(results);
-            }
-    });
-
-    // Work on adding create bug ting ye
-
-})
-
-app.post("/createBug",function(req,res){
-    const bugObject = (req.body);
-    const projectID = bugObject.currentProjID._id
-    const newTicket = {bugName:bugObject.Name, bugStatus:bugObject.Status, bugText:bugObject.Text, bugPriority:bugObject.Priority}
-
-    // let projIndex = 0
-
-    // UserModel.findById(bugObject.userIDBase, function(err,results){
-    //     results.projects.map(function(x,index){
-    //         // console.log(x._id)
-    //         // console.log(index)
-    //         if (x._id == projectID){
-    //             projIndex = index;
-    //             console.log(projIndex);
-    //         }else{
-
-    //         }
-    //     });
-    // })
-    console.log(bugObject)
-    console.log(projectID)
-    console.log(bugObject.userIDBase)
-
-    UserModel.updateOne(
-        { "_id": bugObject.userIDBase, "projects._id": projectID}, 
-        { "$push": { "projects.$.projectBugs" : {"bugName":bugObject.Name, "bugStatus":bugObject.Status, "bugText":bugObject.Text, "bugPriority":bugObject.Priority}  } },
+app.post("/addUser",function(req,res){
+    const requestedUser = req.body.requestedUser;
+    const projectID = req.body.projectID;
+    console.log(requestedUser,projectID)
+    ProjectModel.findOneAndUpdate({"_id": projectID},
+        {"$push": {"addedUsers": requestedUser}},
         function(err,results){
             if (err){
                 console.log(err)
             }else{
                 res.json(results)
             }
-        }
-        
-    );
-
-    // UserModel.findOneAndUpdate(
-    // { "_id": bugObject.userIDBase}, 
-    // { "$push": { "projects.$[i].projectBugs" : newTicket  } },
-    // { arrayFilters: [{'i._id': projIndex,},],}
-    
-    // );
-    
+    })
 })
+
+app.post("/deleteUser",function(req,res){
+    const requestedUser = req.body.requestedUser;
+    const projectID = req.body.projectID;
+    ProjectModel.findOneAndUpdate({"_id": projectID},
+        {"$pull": {"addedUsers": requestedUser}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                res.json(results)
+            }
+    })
+
+})
+
+app.post("/createProject",function(req,res){
+    const projectObject = (req.body);
+
+    const newProject = new ProjectModel({
+        projectName:projectObject.name,
+        projectOwner:projectObject.owner,
+        addedUsers: [projectObject.owner]
+    });
+    newProject.save();
+    res.json("User created.")
+
+
+})
+
+app.post("/deleteProject",function(req,res){
+    const projectID = req.body.projectID;
+    ProjectModel.findOneAndDelete({"_id":projectID},function(err,results){
+        if (err){
+            console.log(err);
+        }else{
+            return;
+        }
+    })
+})
+
+app.post("/getUserProjects", function(req,res){
+    const email = (req.body.userEmail)
+    console.log(email)
+    ProjectModel.find({addedUsers: email },function(err, results){
+        res.json(results)
+        console.log(results)
+    })
+    console.log("yay")
+})
+
+app.post("/getSingleProject",function(req,res){
+    const projectID = (req.body.projectID)
+    ProjectModel.findById(projectID,function(err, results){
+        res.json(results)
+        console.log(results)
+    })
+})
+
+app.post("/createBug",function(req,res){
+    const bugObject = (req.body);
+    const projectID = bugObject.currentProjID._id
+    const newTicket = {"bugName":bugObject.Name, "bugStatus":bugObject.Status, "bugText":bugObject.Text, "bugPriority":bugObject.Priority}
+
+    ProjectModel.findOneAndUpdate({"_id": projectID},
+        {"$push": {"projectBugs": newTicket}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                res.json(results)
+            }
+    })
+    
+});
 
 
 app.post("/deleteBug", function(req,res){
-    requestedBugID = req.body.bugID;
-    requestedUserID = req.body.currentUserID;
-    console.log(requestedBugID);
-    console.log(requestedUserID);
-    UserModel.findOneAndUpdate({ _id: requestedUserID }, { $pull: { projects: { _id: requestedBugID } }}, function(err, obj) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("New bug successfully deleted.");
-        }
-    })
+    const requestedBugID = req.body.bugID;
+    const requestedProjID = req.body.projectID;
+
+    ProjectModel.updateOne({_id:requestedProjID}, 
+        {"$pull":{ "projectBugs":{"_id":requestedBugID}}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                res.json(results)
+            }
+        })
+
 })
 
 
 
-
-
-// app.get("/editBug",function(req,res){
-//     UserModel.findById(currentIDUser, function(err,results){
-//         results.projects.map(function(x){
-//             if (x._id == specEditBug){
-//                 res.render("index",{Name:x.projectName, Status:x.bugStatus, Description:x.bugText, Priority:x.bugPriority, ID:x._id})
-//             }else {
-//                 console.log("still searching.")
-//             }
-//         })
-//     })
-
-// })
-
 app.post("/changeBug",function(req,res){
-    console.log(req.body.editNewObject.nameTick);
-    UserModel.findOneAndUpdate({_id: req.body.currentUser, 'projects._id': req.body.bugID}, { $set: { "projects.$.projectName": req.body.editNewObject.nameTick, "projects.$.bugStatus" :req.body.editNewObject.statTick, "projects.$.bugText":req.body.editNewObject.textTick , "projects.$.bugPriority": req.body.editNewObject.priorTick }}, function(err, results){
-        console.log(results)
-    })
+    const bugID = req.body.bugID;
+
+    const editedBug = (req.body.editNewObject);
+
+    ProjectModel.updateOne({"projectBugs._id" : bugID},{"$set" : {
+        "projectBugs.$.bugName": editedBug.nameTick,
+        "projectBugs.$.bugStatus": editedBug.statTick,
+        "projectBugs.$.bugText": editedBug.textTick,
+        "projectBugs.$.bugPriority": editedBug.priorTick
+     }},function(err,results){
+        if (err){
+            console.log(err);
+        }else{
+            res.json(results);
+        }
+     })
+       
+
+
 });
 
 app.listen(3001,function(){

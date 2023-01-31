@@ -5,12 +5,16 @@ body{
 span{
     color:white;
 }
+h1 {
+    /* margin: 0 auto; */
+    font-size: 3.5em;
+ }
 
 
 /* CreateTicket */
 .ticket-container{
     background-color: #f6f5ff;
-    margin: 5% 15% 15% 15%;
+    margin: 5% 15% 5% 15%;
     padding: 5%;
     color: black;
     border: 10px inset;
@@ -94,26 +98,31 @@ div.text-end h5{
     background-color: #0dcaf0;
     border: 3px solid black;
 }
+.return-btn{
+    background-color: #0dcaf0;
+    border: 3px solid black;
+    font-size: 1.25em;
+    margin-bottom: 20px ;
+}
 
 
 
 /* Navbar */
-.navbar{
+.my-navbar{
     background-color:#f6f5ff;
-    text-align: center;
     color: black;
-    padding-top: 10%;
-    padding-bottom: 10%;
-    margin: 5% 15% 10% 15% ;
+    margin: 0 0 6% 0 ;
     border: 10px inset;
+    margin: 5% 15% 5% 15%;
     border-color: #333333 #a3a3a8 #dadae0;
     box-shadow: 15px 15px 3px #525252 ;
 }
+div.my-navbar .row{
+    margin: 0;
+    padding: 20px 20px 15px 20px;
 
-h1 {
-   margin: 0 auto;
-   font-size: 3.5em;
 }
+
 
 
 
@@ -121,25 +130,5 @@ h1 {
 .form-control{
     background-color: black;
 }
-
-
-
-/* 
-
-Bootstrap
-.form-group{
-    padding-bottom: 20px;
-}
-
-
-
-Scrollable columun 
-.right{
-    height: 100%;
-    overflow-y: scroll;
-}
-.row-height{
-    height: 100vh;
-} */
 
 
