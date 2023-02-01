@@ -121,7 +121,6 @@ app.post("/getUserProjects", function(req,res){
     console.log(email)
     ProjectModel.find({addedUsers: email },function(err, results){
         res.json(results)
-        console.log(results)
     })
     console.log("yay")
 })
@@ -130,7 +129,6 @@ app.post("/getSingleProject",function(req,res){
     const projectID = (req.body.projectID)
     ProjectModel.findById(projectID,function(err, results){
         res.json(results)
-        console.log(results)
     })
 })
 
@@ -151,6 +149,49 @@ app.post("/createBug",function(req,res){
     
 });
 
+app.post("/completeBug",function(req,res){
+    const userEmail = req.body.userEmail;
+    const projectID = req.body.projectID;
+    const selectedBug = req.body.finishedBug;
+    const bug = {_id:selectedBug._id,bugName:selectedBug.bugName,bugWorker:userEmail,bugText:selectedBug.bugText,bugPriority:selectedBug.bugPriority};
+    
+    ProjectModel.findOneAndUpdate({"_id": projectID},
+        {"$push": {"completedBugs": bug}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                res.json(results)
+            }
+    })
+
+    ProjectModel.updateOne({_id:projectID}, 
+        {"$pull":{ "projectBugs":{"_id":selectedBug._id}}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+
+            }
+    })
+
+})
+
+app.post("/removeCompletedBug", function(req,res){
+    const requestedBugID = req.body.bugID;
+    const requestedProjID = req.body.projectID;
+
+    ProjectModel.updateOne({_id:requestedProjID}, 
+        {"$pull":{ "completedBugs":{"_id":requestedBugID}}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                res.json(results)
+            }
+    })
+})
+
 
 app.post("/deleteBug", function(req,res){
     const requestedBugID = req.body.bugID;
@@ -164,7 +205,7 @@ app.post("/deleteBug", function(req,res){
             }else{
                 res.json(results)
             }
-        })
+    })
 
 })
 

@@ -2,6 +2,7 @@ import react,{useEffect, useState} from "react";
 import EditBugs from "./EditBugs";
 import CreateTicket from "./CreateTicket";
 import Axios from "axios";
+import FinishedTickets from "./FinishedTickects";
 
 function ShowTickets (props){
 
@@ -9,6 +10,9 @@ function ShowTickets (props){
     const [bugArray, setBugArray ] = useState([])
     const [ isWait , setWait ] = useState(false)
     const [ isHidden , setHidden ] = useState(false)
+
+    const [toggleBtn, setBtn] = useState("View Completed Tickets")
+    const [viewStatus, setView] = useState("inProgress")
 
     // just for edit bugs
     const [ticketID, setTicketID] = useState("");
@@ -28,6 +32,16 @@ function ShowTickets (props){
         })
     }else{
 
+    }
+
+    function handleToggle(){
+        if (viewStatus === "inProgress"){
+            setView("completed")
+            setBtn("View tickets in progress")
+        }else{
+            setView("inProgress")
+            setBtn("View Completed Tickets")
+        }
     }
 
     function handleDelete(event){
@@ -51,6 +65,18 @@ function ShowTickets (props){
         })
         
     }
+
+    function handleComplete(event){
+        const bugID = event.target.value;
+        console.log(userEmail)
+        const finishedBug = bugArray.filter(bug => bug._id == bugID)[0]
+        console.log(finishedBug)
+        Axios.post("http://localhost:3001/completeBug", { projectID,userEmail,finishedBug }).then(function(response){
+
+        })
+        setBugArray(bugArray.filter(bug => bug._id !== bugID));
+    }
+
     function handleReturn(){
         props.setHidden(false)
     }
@@ -62,8 +88,9 @@ function ShowTickets (props){
                 <div className="row">
                     <div hidden={isHidden}><button onClick={handleReturn} className="return-btn">Return to Projects</button></div>
                     <div className="col-8"><h2>{selectedProj.projectName}</h2></div>
-                    <div className="col-4"><h2>Owner:{selectedProj.projectOwner}</h2></div>
-                    {bugArray.map((x, index) => 
+                    <div className="col-4 text-end"><button onClick={handleToggle} className="return-btn">{toggleBtn}</button></div>
+                    
+                    {viewStatus === "inProgress" ? bugArray.map((x, index) => 
                     <div key={index} className="bugComp">
                         <div className="row">
                         <div className="col-9">
@@ -77,14 +104,17 @@ function ShowTickets (props){
                         <p>Status:<span>{x.bugStatus}</span></p>
                         <div className="row">
                             <div className="col">
-                                <button onClick={handleDelete} value={x._id}  type="button" className="bug-comp-btn">Delete</button>
+                                <button style={{marginRight:"10px"}} onClick={handleDelete} value={x._id}  type="button" className="bug-comp-btn">Delete</button>
+                                <button onClick={handleEdit} value={x._id} className="bug-comp-btn" type="button">Edit</button>
                             </div>
                             <div className="col text-end">
-                                <button onClick={handleEdit} value={x._id} className="bug-comp-btn" type="button">Edit</button>
+                                <button className="complete-btn" value={x._id} onClick={handleComplete}>Completed</button>
                             </div>
                         </div>
                     </div>
-                    )}
+                    ) : <FinishedTickets projectID={projectID}/> }
+
+
                     
                 </div>
             </div>

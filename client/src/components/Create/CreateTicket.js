@@ -77,7 +77,6 @@ function CreateTicket(props) {
                       <option>Ongoing</option>
                       <option>Delayed</option>
                       <option>Overdue</option>
-                      <option>Completed</option>
                     </select>
                   </div><br/>
               </div>

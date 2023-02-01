@@ -65,7 +65,7 @@ div.bugComp > .row{
 }
 
 .Low{
-    background-color: greenyellow;
+    background-color: #b7c9ed;
     text-align: center;
     padding-top: 2px;
     padding-bottom: 3px;
@@ -104,6 +104,11 @@ div.text-end h5{
     font-size: 1.25em;
     margin-bottom: 20px ;
 }
+.complete-btn{
+    background-color: #27e848;
+    color: black;
+    border: 3px solid black;
+}
 
 
 
@@ -129,6 +134,9 @@ div.my-navbar .row{
 /* Bootstarp v2 */
 .form-control{
     background-color: black;
+}
+.col-3{
+    border: solid 3px black;
 }
 
 
