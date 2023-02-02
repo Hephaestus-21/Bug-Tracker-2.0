@@ -2,7 +2,6 @@ require("dotenv").config()
 const express = require("express")
 const mongoose = require("mongoose")
 const BugModel = require("./models/Bugs");
-let ejs = require('ejs');
 
 
 

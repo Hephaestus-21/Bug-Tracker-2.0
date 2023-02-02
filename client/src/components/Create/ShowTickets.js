@@ -22,7 +22,7 @@ function ShowTickets (props){
     const userEmail = props.user.email;
     const projectID = props.projectID
     
-
+    
     
     if (isWait === false){
         setWait(true);
