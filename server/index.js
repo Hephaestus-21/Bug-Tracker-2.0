@@ -2,6 +2,7 @@ require("dotenv").config()
 const express = require("express")
 const mongoose = require("mongoose")
 const BugModel = require("./models/Bugs");
+const jwt = require('jsonwebtoken')
 
 
 
@@ -32,6 +33,54 @@ app.post("/getUserLogin", function (req, res){
         }
     })
 })
+
+// ####################################
+// ####################################
+// ####################################
+// ####################################
+
+app.post("/login", async function(req,res){
+    const user = await UserModel.findOne({email: req.body.email,});
+
+    if(!user) {
+        return {status:"error",error:"Invalid login"}
+    }
+    if (req.body.password == user.password){
+        const token = jwt.sign(
+			{
+                _id: user._id,
+				fname: user.fname,
+                lname: user.lname,
+				email: user.email,
+			},
+			process.env.SECRET
+		)
+
+		return res.json({ status: 'ok', user: token })
+    }else{
+        return res.json({ status: 'error', user: false })
+    }
+})
+
+app.get('/getProjects', async (req, res) => {
+	const token = req.headers['x-access-token']
+	try {
+		const decoded = jwt.verify(token, process.env.SECRET)
+		const email = decoded.email
+		const projects = await ProjectModel.find({ addedUsers: email })
+        const user = await UserModel.findOne({email:email})
+
+        
+		return res.json({ status: 'ok', projDoc: projects , user: user})
+	} catch (error) {
+		console.log(error)
+		res.json({ status: 'error', error: 'invalid token' })
+	}
+})
+
+// ######################
+// ######################
+// ######################
 
 app.post("/getUserByID", function (req, res){
     const requestedUser = (req.body.userID);
