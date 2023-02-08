@@ -1,25 +1,26 @@
 import react,{useState} from "react";
 import Axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function CreateRegistor(props){
+
+    let navigate = useNavigate()
 
     const [newFName, setFName] = useState("");
     const [newLName, setLName] = useState("");
     const [newEmail, setEmail] = useState("");
     const [newPassword, setNewPassword] = useState("");
 
-    function handleRegister(event){
+    async function handleRegister(event){
         const newUserDoc = {fname:newFName,lname:newLName,email:newEmail,password:newPassword}
-        Axios.post("http://localhost:3001/createNewUser", {newUserDoc}).then(function(response){
-            console.log(response);
-            props.setHide(false)
-        })
+        const response = await Axios.post("http://localhost:3001/register", {newUserDoc})
+        const data = await response.data;
+
+		if (data.status === 'ok') {
+			navigate('/login')
+		}
     }
     
-    function handleAccount(){
-        props.setHide(false)
-    }
-
 
     return(
         <div className="ticket-container">
@@ -55,7 +56,6 @@ function CreateRegistor(props){
                 </div>
                 <div className="row">
                     <div className="col"><button onClick={handleRegister} type="button" className="my-btn">Register</button></div>
-                    <div className="col"><button onClick={handleAccount} type="button" className="my-btn">Already have an account</button></div>
                 </div>
             </form>
         </div>

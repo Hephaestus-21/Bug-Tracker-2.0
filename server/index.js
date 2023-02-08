@@ -2,15 +2,15 @@ require("dotenv").config()
 const express = require("express")
 const mongoose = require("mongoose")
 const BugModel = require("./models/Bugs");
-let ejs = require('ejs');
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const cors = require("cors");
+const UserModel = require("./models/Users");
+const ProjectModel = require("./models/Projects")
 
 
 const app = express()
 app.use(express.json())
-const cors = require("cors");
-const UserModel = require("./models/Users");
-const ProjectModel = require("./models/Projects")
 app.use(express.urlencoded( {extended: true} ));
 app.use(express.static(__dirname+'/public'));
 app.set('view engine', 'ejs');
@@ -33,6 +33,82 @@ app.post("/getUserLogin", function (req, res){
         }
     })
 })
+
+// ####################################
+// ####################################
+// ####################################
+// ####################################
+
+app.post("/login", async function(req,res){
+    const user = await UserModel.findOne({email: req.body.email,});
+
+    if(!user) {
+        return {status:"error",error:"Invalid login"}
+    }
+
+    const isPasswordEqual = await bcrypt.compare(
+		req.body.password,
+		user.password
+	)
+
+    if (isPasswordEqual){
+        const token = jwt.sign(
+			{
+                _id: user._id,
+				fname: user.fname,
+                lname: user.lname,
+				email: user.email,
+			},
+			process.env.SECRET
+		)
+
+		return res.json({ status: 'ok', user: token })
+    }else{
+        return res.json({ status: 'error', user: false })
+    }
+})
+
+app.post('/register', async (req, res) => {
+
+
+	console.log(req.body)
+	try {
+		const reqUser = (req.body.newUserDoc)
+        const cryptPassword = await bcrypt.hash(reqUser.password, 2)
+        const newUser = new UserModel({
+            fname: reqUser.fname,
+            lname: reqUser.lname,
+            email: reqUser.email,
+            password: cryptPassword
+        });
+        await newUser.save();
+		res.json({ status: 'ok' })
+	} catch (err) {
+		res.json({ status: 'error', error: 'Duplicate email' })
+	}
+}) 
+
+app.get('/getProjects', async (req, res) => {
+
+	const token = req.headers['x-access-token']
+	try {
+		const decoded = jwt.verify(token, process.env.SECRET)
+		const email = decoded.email
+		const projects = await ProjectModel.find({ addedUsers: email })
+        const user = await UserModel.findOne({email:email})
+
+        
+		return res.json({ status: 'ok', projDoc: projects , user: user})
+	} catch (error) {
+		console.log(error)
+		res.json({ status: 'error', error: 'invalid token' })
+	}
+
+})
+
+// ###############################################
+// ###############################################
+// ###############################################
 
 app.post("/getUserByID", function (req, res){
     const requestedUser = (req.body.userID);
@@ -121,7 +197,6 @@ app.post("/getUserProjects", function(req,res){
     console.log(email)
     ProjectModel.find({addedUsers: email },function(err, results){
         res.json(results)
-        console.log(results)
     })
     console.log("yay")
 })
@@ -130,7 +205,6 @@ app.post("/getSingleProject",function(req,res){
     const projectID = (req.body.projectID)
     ProjectModel.findById(projectID,function(err, results){
         res.json(results)
-        console.log(results)
     })
 })
 
@@ -151,6 +225,49 @@ app.post("/createBug",function(req,res){
     
 });
 
+app.post("/completeBug",function(req,res){
+    const userEmail = req.body.userEmail;
+    const projectID = req.body.projectID;
+    const selectedBug = req.body.finishedBug;
+    const bug = {_id:selectedBug._id,bugName:selectedBug.bugName,bugWorker:userEmail,bugText:selectedBug.bugText,bugPriority:selectedBug.bugPriority};
+    
+    ProjectModel.findOneAndUpdate({"_id": projectID},
+        {"$push": {"completedBugs": bug}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                res.json(results)
+            }
+    })
+
+    ProjectModel.updateOne({_id:projectID}, 
+        {"$pull":{ "projectBugs":{"_id":selectedBug._id}}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+
+            }
+    })
+
+})
+
+app.post("/removeCompletedBug", function(req,res){
+    const requestedBugID = req.body.bugID;
+    const requestedProjID = req.body.projectID;
+
+    ProjectModel.updateOne({_id:requestedProjID}, 
+        {"$pull":{ "completedBugs":{"_id":requestedBugID}}},
+        function(err,results){
+            if (err){
+                console.log(err)
+            }else{
+                res.json(results)
+            }
+    })
+})
+
 
 app.post("/deleteBug", function(req,res){
     const requestedBugID = req.body.bugID;
@@ -164,7 +281,7 @@ app.post("/deleteBug", function(req,res){
             }else{
                 res.json(results)
             }
-        })
+    })
 
 })
 

@@ -12,6 +12,24 @@ const ProjectSchema = new mongoose.Schema({
         required: true,
     },
     addedUsers: [String],
+    completedBugs: [{
+        bugName: {
+            type: String,
+            required: true,
+        },
+        bugWorker:{
+            type: String,
+            required: true,
+        },
+        bugText: {
+            type: String,
+            required: true,
+        },
+        bugPriority: {
+            type: String,
+            required: true,
+        }
+    }],
     projectBugs: [{
         bugName: {
             type: String,

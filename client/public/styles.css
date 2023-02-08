@@ -23,7 +23,7 @@ h1 {
 }
 
 .create-input-css-my{
-    background-color: blue;
+    background-color: blue   ;
     color:white;
     border: 5px inset;
     border-color: #333333 #a3a3a8;
@@ -56,6 +56,9 @@ div.footer h2{
     margin-bottom: 20px;
     box-shadow: 7px 7px 3px #525252;
 }
+.border-prior{
+    border: solid 3px black;
+}
 div.bugComp h5{
     font-weight: bold;
 }
@@ -65,7 +68,7 @@ div.bugComp > .row{
 }
 
 .Low{
-    background-color: greenyellow;
+    background-color: #b7c9ed;
     text-align: center;
     padding-top: 2px;
     padding-bottom: 3px;
@@ -104,6 +107,11 @@ div.text-end h5{
     font-size: 1.25em;
     margin-bottom: 20px ;
 }
+.complete-btn{
+    background-color: #27e848;
+    color: black;
+    border: 3px solid black;
+}
 
 
 
@@ -122,6 +130,10 @@ div.my-navbar .row{
     padding: 20px 20px 15px 20px;
 
 }
+.navbar-btn{
+    text-align: center;
+    margin-top: 5px;
+}
 
 
 
@@ -130,5 +142,6 @@ div.my-navbar .row{
 .form-control{
     background-color: black;
 }
+
 
 
