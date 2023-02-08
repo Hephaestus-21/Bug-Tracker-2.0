@@ -16,6 +16,7 @@ function ShowProjects(props) {
   const [projectArray, setProjectArray ] = useState([])
   const [isHidden, setHidden] = useState(false);
 
+  console.log(user)
 
   const [projectID, setID] = useState("")
   
@@ -133,7 +134,7 @@ function ShowProjects(props) {
             </div>
             <div className="row">
               <div className="col">
-                <button value={x._id} onClick={removeUser}  type="button" className="bug-comp-btn">RemoveUser</button>
+                <button value={x._id} onClick={removeUser}  type="button" className="bug-comp-btn">Remove User</button>
               </div>
               <div className="col text-end">
                 <button onClick={addUsers} value={x._id} className="bug-comp-btn" type="button">Add Users</button>

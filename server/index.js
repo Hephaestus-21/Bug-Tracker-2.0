@@ -2,15 +2,15 @@ require("dotenv").config()
 const express = require("express")
 const mongoose = require("mongoose")
 const BugModel = require("./models/Bugs");
-const jwt = require('jsonwebtoken')
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const cors = require("cors");
+const UserModel = require("./models/Users");
+const ProjectModel = require("./models/Projects")
 
 
 const app = express()
 app.use(express.json())
-const cors = require("cors");
-const UserModel = require("./models/Users");
-const ProjectModel = require("./models/Projects")
 app.use(express.urlencoded( {extended: true} ));
 app.use(express.static(__dirname+'/public'));
 app.set('view engine', 'ejs');
@@ -45,7 +45,13 @@ app.post("/login", async function(req,res){
     if(!user) {
         return {status:"error",error:"Invalid login"}
     }
-    if (req.body.password == user.password){
+
+    const isPasswordEqual = await bcrypt.compare(
+		req.body.password,
+		user.password
+	)
+
+    if (isPasswordEqual){
         const token = jwt.sign(
 			{
                 _id: user._id,
@@ -62,7 +68,28 @@ app.post("/login", async function(req,res){
     }
 })
 
+app.post('/register', async (req, res) => {
+
+
+	console.log(req.body)
+	try {
+		const reqUser = (req.body.newUserDoc)
+        const cryptPassword = await bcrypt.hash(reqUser.password, 2)
+        const newUser = new UserModel({
+            fname: reqUser.fname,
+            lname: reqUser.lname,
+            email: reqUser.email,
+            password: cryptPassword
+        });
+        await newUser.save();
+		res.json({ status: 'ok' })
+	} catch (err) {
+		res.json({ status: 'error', error: 'Duplicate email' })
+	}
+}) 
+
 app.get('/getProjects', async (req, res) => {
+
 	const token = req.headers['x-access-token']
 	try {
 		const decoded = jwt.verify(token, process.env.SECRET)
@@ -76,11 +103,12 @@ app.get('/getProjects', async (req, res) => {
 		console.log(error)
 		res.json({ status: 'error', error: 'invalid token' })
 	}
+
 })
 
-// ######################
-// ######################
-// ######################
+// ###############################################
+// ###############################################
+// ###############################################
 
 app.post("/getUserByID", function (req, res){
     const requestedUser = (req.body.userID);

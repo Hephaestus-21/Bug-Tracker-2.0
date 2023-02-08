@@ -33,6 +33,7 @@ function CreateTicket(props) {
 
     Axios.post("http://localhost:3001/createBug", {Name:bugName, Status:bugStatus, Text:bugText, Priority:bugPriority, currentProjID:projectID}).then(function (res) { 
       setWait(true)
+      document.getElementById("create-ticket").reset();
     });
   }
 
@@ -56,7 +57,7 @@ function CreateTicket(props) {
       <h2>Create Ticket</h2>
       <br/>
       
-        <form>
+        <form id="create-ticket">
           <div className="container">
             <div className="row">
               <div className="col-8">
