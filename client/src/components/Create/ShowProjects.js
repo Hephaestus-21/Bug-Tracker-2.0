@@ -2,28 +2,59 @@ import react,{useEffect, useState} from "react";
 import Axios from "axios";
 import CreateProject from "./CreateProject";
 import ShowTickets from "./ShowTickets";
+import { useNavigate } from "react-router-dom";
+import base64 from 'base-64';
 
 
 
 
 function ShowProjects(props) {
 
-  const user = props.loggedUser
+  let navigate = useNavigate()
+
+  const [user, setUser] = useState({})
   const [projectArray, setProjectArray ] = useState([])
   const [isHidden, setHidden] = useState(false);
 
+  console.log(user)
 
   const [projectID, setID] = useState("")
   
-  // just for edit bugs
+  async function populateProjectArray() {
+		const req = await fetch('http://localhost:3001/getProjects', {
+			headers: {
+				'x-access-token': localStorage.getItem('token'),
+			},
+		})
+    
+		const data = await req.json()
+
+		if (data.status === 'ok') {
+			setProjectArray(data.projDoc) 
+      setUser(data.user)     
+		} else {
+			alert(data.error)
+		}
+	}
 
   useEffect(() => {
-    const userEmail = user.email
-    Axios.post("http://localhost:3001/getUserProjects", {userEmail}).then(function(response){
-    setProjectArray(response.data);
-  })
-
-  }, []);
+		const token = localStorage.getItem('token')
+		if (token) {
+			
+      const parts = token.split('.');
+      console.log(parts)
+      let decodedToken = base64.decode(parts[1]);
+      decodedToken = JSON.parse(decodedToken);
+			if (!decodedToken) {
+				localStorage.removeItem('token')
+				navigate('/login')
+			} else {
+				populateProjectArray()
+			}
+		}else{
+      navigate("/login")
+    }
+	}, [])
   
   function handleDelete(event){
     const projectID = event.target.value;
@@ -64,13 +95,25 @@ function ShowProjects(props) {
     setHidden(true);
 
   }
+  function handleLogOut(){
+    localStorage.removeItem('token')
+		navigate('/login')
+  }
 
 
   return(
     <div>
       <div hidden={isHidden}><CreateProject currentUserEmail={user.email} userArray={projectArray} setUserArray={setProjectArray} currentID={user._id} /></div>
       <div hidden={isHidden} className="ticket-container">
-          <h2>Projects</h2><br/>
+          <div className="row">
+            <div className="col">
+              <h2>Projects</h2>
+            </div>
+            <div className="col text-end">
+              <button onClick={handleLogOut} className="my-btn">Logout</button>
+            </div>
+          </div>
+          <br/>
           {projectArray.map((x, index) => 
           <div key={index} className="bugComp">
             <div className="row">
@@ -83,7 +126,7 @@ function ShowProjects(props) {
             </div>
             <div className="row">
               <div className="col">
-                <button hidden={!(x.projectOwner == user.email)} value={x._id} onClick={handleDelete}  type="button" className="bug-comp-btn">Delete</button>
+                <button value={x._id} onClick={handleDelete}  type="button" className="bug-comp-btn">Delete</button>
               </div>
               <div className="col text-end">
                 <button onClick={handleView} value={x._id} className="bug-comp-btn" type="button">View Project</button>
@@ -91,7 +134,7 @@ function ShowProjects(props) {
             </div>
             <div className="row">
               <div className="col">
-                <button hidden={!(x.projectOwner == user.email)} value={x._id} onClick={removeUser}  type="button" className="bug-comp-btn">RemoveUser</button>
+                <button value={x._id} onClick={removeUser}  type="button" className="bug-comp-btn">Remove User</button>
               </div>
               <div className="col text-end">
                 <button onClick={addUsers} value={x._id} className="bug-comp-btn" type="button">Add Users</button>

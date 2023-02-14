@@ -8,6 +8,7 @@ function CreateProject(props) {
   // for database to create ticket
 
   const userEmail = props.currentUserEmail
+  console.log(userEmail)
 
   
   function nameChange(event){

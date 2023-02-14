@@ -96,7 +96,7 @@ function ShowTickets (props){
                         <div className="col-9">
                             <h5>{x.bugName}</h5>
                         </div>
-                        <div className={`col-3 ${x.bugPriority} text-end`}>
+                        <div className={`col-3 border-prior ${x.bugPriority} text-end`}>
                             <h5 className={x.bugPriority}>{x.bugPriority}</h5>
                         </div>
                         </div>
