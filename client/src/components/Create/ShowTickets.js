@@ -68,9 +68,7 @@ function ShowTickets (props){
 
     function handleComplete(event){
         const bugID = event.target.value;
-        console.log(userEmail)
         const finishedBug = bugArray.filter(bug => bug._id == bugID)[0]
-        console.log(finishedBug)
         Axios.post("http://localhost:3001/completeBug", { projectID,userEmail,finishedBug }).then(function(response){
 
         })

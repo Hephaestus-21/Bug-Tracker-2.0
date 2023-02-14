@@ -8,7 +8,6 @@ function CreateProject(props) {
   // for database to create ticket
 
   const userEmail = props.currentUserEmail
-  console.log(userEmail)
 
   
   function nameChange(event){
@@ -17,27 +16,20 @@ function CreateProject(props) {
  
   
 
-  function handleClick(){
+  async function handleClick(){
 
-    Axios.post("http://localhost:3001/createProject", {name:projectName, owner:userEmail}).then(function (res) {
-      console.log("Bug created in the backend.")
-      console.log(res.data);
-      setWait("true");
+    const response = await Axios.post("http://localhost:3001/createProject", {name:projectName, owner:userEmail})
+    const data = await response.data;
 
-      
-    });
+    if (data.status) {
+      Axios.post("http://localhost:3001/getUserProjects", {userEmail} ).then(function(response){
+        props.setUserArray(response.data);
+      });
+		} else {
+			console.log('something went wrong')
+		}
   }
 
-
-  if (isWait == "true"){
-    setWait(false)
-    Axios.post("http://localhost:3001/getUserProjects", {userEmail} ).then(function(response){
-      props.setUserArray(response.data);
-      
-    });
-  }else{
-
-  }
 
 
 

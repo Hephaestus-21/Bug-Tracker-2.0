@@ -23,16 +23,6 @@ mongoose.connect(process.env.MONGOOSEURL, () => {
   console.log("Connected to MongoDB");
 });
 
-app.post("/getUserLogin", function (req, res){
-    const requestedUser = (req.body);
-    UserModel.findOne({email: requestedUser.email, password: requestedUser.password }, function(err,results){
-        if (err){
-            console.log(err)
-        }else{
-            res.send(results);
-        }
-    })
-})
 
 // ####################################
 // ####################################
@@ -110,37 +100,10 @@ app.get('/getProjects', async (req, res) => {
 // ###############################################
 // ###############################################
 
-app.post("/getUserByID", function (req, res){
-    const requestedUser = (req.body.userID);
-    UserModel.findById(requestedUser, function(err,results){
-        res.json(results);
-    })
-})
-
-// app.post("/getSpecificTicket", function (req, res){
-//     const requestedTicketID = req.body.ticketID;
-//     UserModel.findById(req.body.userId, function(err,results){
-//         res.json(results)
-//     })
-// })
-
-app.post("/createNewUser", function(req, res){
-    const reqUser = (req.body.newUserDoc)
-    const newUser = new UserModel({
-        fname: reqUser.fname,
-        lname: reqUser.lname,
-        email: reqUser.email,
-        password: reqUser.password
-    });
-    // dont need to specify the projects, can be seen as re assigning to an already set variable/const.
-    newUser.save();
-    res.json("User created.")
-})
 
 app.post("/addUser",function(req,res){
     const requestedUser = req.body.requestedUser;
     const projectID = req.body.projectID;
-    console.log(requestedUser,projectID)
     ProjectModel.findOneAndUpdate({"_id": projectID},
         {"$push": {"addedUsers": requestedUser}},
         function(err,results){
@@ -176,7 +139,7 @@ app.post("/createProject",function(req,res){
         addedUsers: [projectObject.owner]
     });
     newProject.save();
-    res.json("User created.")
+    res.json({status: true})
 
 
 })
@@ -194,11 +157,9 @@ app.post("/deleteProject",function(req,res){
 
 app.post("/getUserProjects", function(req,res){
     const email = (req.body.userEmail)
-    console.log(email)
     ProjectModel.find({addedUsers: email },function(err, results){
         res.json(results)
     })
-    console.log("yay")
 })
 
 app.post("/getSingleProject",function(req,res){
