@@ -13,7 +13,6 @@ function EditBugs(props) {
 
   const ref = useRef(null);
 
-  console.log(typeof props.editTicketObj.bugStatus)
 
   const ticketID = props.ticketID
   const projectID = props.selectedProj._id

@@ -16,7 +16,6 @@ function ShowProjects(props) {
   const [projectArray, setProjectArray ] = useState([])
   const [isHidden, setHidden] = useState(false);
 
-  console.log(user)
 
   const [projectID, setID] = useState("")
   
@@ -42,7 +41,6 @@ function ShowProjects(props) {
 		if (token) {
 			
       const parts = token.split('.');
-      console.log(parts)
       let decodedToken = base64.decode(parts[1]);
       decodedToken = JSON.parse(decodedToken);
 			if (!decodedToken) {

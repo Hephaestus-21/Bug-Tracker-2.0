@@ -64,7 +64,7 @@ function CreateTicket(props) {
 
                 {/*Project Name Input  */}
                 <div className="form-group">
-                  <label htmlFor="bootName"><h5>Project Name:</h5></label><br/>
+                  <label htmlFor="bootName"><h5>Ticket Name:</h5></label><br/>
                   <input onChange={nameChange} type="text" className="create-input-css-my" id="bootEmail" />
                 </div><br/>
                 
