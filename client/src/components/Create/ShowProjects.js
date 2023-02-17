@@ -1,4 +1,4 @@
-import react,{useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import Axios from "axios";
 import CreateProject from "./CreateProject";
 import ShowTickets from "./ShowTickets";

@@ -1,4 +1,4 @@
-import react, { useState } from "react";
+import { useState } from "react";
 import Axios from 'axios';
 
 function CreateTicket(props) {
@@ -103,7 +103,7 @@ function CreateTicket(props) {
               </div>
 
             </div>
-            <div className="row"><div className="col"><button onClick={handleClick} type="button" className="my-btn">Add bug</button></div></div>
+            <div className="row"><div className="col"><button onClick={handleClick} type="button" className="my-btn">Add Ticket</button></div></div>
           </div>
         </form>
     </div>

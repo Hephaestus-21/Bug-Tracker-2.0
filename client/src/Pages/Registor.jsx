@@ -1,8 +1,8 @@
-import react,{useState} from "react";
+import {useState} from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function CreateRegistor(props){
+function CreateRegistor(){
 
     let navigate = useNavigate()
 

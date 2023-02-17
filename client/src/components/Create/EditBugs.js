@@ -1,5 +1,5 @@
 import Axios from "axios";
-import react, {useRef, useState } from "react";
+import {useRef, useState } from "react";
 
 
 
@@ -45,7 +45,7 @@ function EditBugs(props) {
   }
 
 
-  if ( isEditWait == true ){
+  if ( isEditWait === true ){
     setEditWait(false);
     Axios.post("http://localhost:3001/getSingleProject", {projectID} ).then(function(response){
       props.setBugArray(response.data.projectBugs);

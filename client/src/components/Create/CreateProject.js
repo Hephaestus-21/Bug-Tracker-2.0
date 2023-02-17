@@ -1,14 +1,10 @@
-import react, { useState } from "react";
+import { useState } from "react";
 import Axios from 'axios';
 
 function CreateProject(props) {
   const [projectName, setProjectName] = useState("");
 
-  const [isWait, setWait] = useState("false");
-  // for database to create ticket
-
   const userEmail = props.currentUserEmail
-
   
   function nameChange(event){
     setProjectName(event.target.value)

@@ -1,12 +1,10 @@
-import react, { useState } from "react";
+import { useState } from "react";
 import Axios from 'axios';
 
 function CreateLogin(props) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogHidden, setHidden] = useState(false);
-
 
 
   async function handleLogin(event){
@@ -31,7 +29,7 @@ function CreateLogin(props) {
   return(
     <div>
       {/* If not logged in show the login form */}
-      <div hidden={isLogHidden} className="ticket-container">
+      <div className="ticket-container">
         <h1>Login</h1><br/>
         <form onSubmit={handleLogin}>
           <div className="row">
