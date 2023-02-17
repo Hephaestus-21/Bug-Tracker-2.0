@@ -7,6 +7,7 @@ A bug tracker app that allows you to keep track and organize your tickets. It ha
 &nbsp;
 ### Register & Login
 ![Alt text](/readmeIMG/loginIMG.png "Optional Title")
+&nbsp;
 ![Alt text](/readmeIMG/registerIMG.png "Optional Title")
 Once a user a is created, their account details are saved in the database. Passwords are encrypted through bcrypts's hash function.
 
